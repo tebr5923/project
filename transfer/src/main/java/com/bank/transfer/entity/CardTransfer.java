@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Setter
 @RequiredArgsConstructor
 @ToString
-@EqualsAndHashCode(of = "cardNumber", callSuper = false)
+@EqualsAndHashCode(of = "cardNumber", callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,5 +20,6 @@ public class CardTransfer extends AbstractTransfer{
 
     @Column(name = "card_number", nullable = false, unique = true)
     private Long cardNumber;
+
 
 }

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Setter
 @RequiredArgsConstructor
 @ToString
-@EqualsAndHashCode(of = "accountNumber", callSuper = false)
+@EqualsAndHashCode(of = "accountNumber", callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
