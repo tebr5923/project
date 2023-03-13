@@ -24,3 +24,6 @@ spring:
     drop-first: false
   application:
     name: transfer-app
+  jpa:
+    hibernate:
+      ddl-auto: none
