@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -21,7 +22,7 @@ public abstract class AbstractTransfer {
     protected Long id;
 
     @Column(name = "amount", nullable = false)
-    protected Float amount;
+    protected BigDecimal amount;
 
     @Column(name = "purpose")
     protected String purpose;
