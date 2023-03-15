@@ -13,8 +13,8 @@ public class AccountTransferControllerExceptionHandler {
 
     @ExceptionHandler(AccountTransferNotFoundException.class)
     public ResponseEntity<String> handleAccountTransferNotFoundException(AccountTransferNotFoundException e) {
-        log.error("AccountTransfer not found", e);
-        return new ResponseEntity<>("AccountTransfer not found", HttpStatus.NOT_FOUND);
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 }

@@ -32,7 +32,7 @@ public class AccountTransferController {
         AccountTransfer accountTransfer =
                 accountTransferService
                         .getById(id)
-                        .orElseThrow(AccountTransferNotFoundException::new);
+                        .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
         AccountTransferDTO dto = AccountTransferMapper.MAPPER.ToDTO(accountTransfer);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
