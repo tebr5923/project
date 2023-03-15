@@ -3,6 +3,7 @@ package com.bank.transfer.mapper;
 import com.bank.transfer.dto.AccountTransferDTO;
 import com.bank.transfer.entity.AccountTransfer;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -12,5 +13,6 @@ public interface AccountTransferMapper {
 
     AccountTransferDTO ToDTO(AccountTransfer accountTransfer);
 
+    @Mapping(target = "id", ignore = true)
     AccountTransfer ToEntity(AccountTransferDTO accountTransferDTO);
 }

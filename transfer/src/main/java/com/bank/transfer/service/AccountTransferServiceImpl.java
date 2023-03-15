@@ -27,12 +27,14 @@ public class AccountTransferServiceImpl implements AccountTransferService{
     }
 
     @Override
+    @Transactional
     public void update(Long id, AccountTransfer accountTransfer) {
         accountTransfer.setId(id);
         accountTransferRepository.save(accountTransfer);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         accountTransferRepository.deleteById(id);
     }
