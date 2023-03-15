@@ -2,6 +2,7 @@ package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.AccountTransferDTO;
 import com.bank.transfer.entity.AccountTransfer;
+import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.mapper.AccountTransferMapper;
 import com.bank.transfer.service.AccountTransferService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,10 @@ public class AccountTransferController {
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountTransferDTO> getById(@PathVariable("id") Long id) {
-        AccountTransfer accountTransfer = accountTransferService.getById(id).orElseThrow(RuntimeException::new);
+        AccountTransfer accountTransfer =
+                accountTransferService
+                        .getById(id)
+                        .orElseThrow(AccountTransferNotFoundException::new);
         AccountTransferDTO dto = AccountTransferMapper.MAPPER.ToDTO(accountTransfer);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
