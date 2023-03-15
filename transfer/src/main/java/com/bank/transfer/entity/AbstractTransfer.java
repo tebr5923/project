@@ -1,7 +1,9 @@
 package com.bank.transfer.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -13,7 +15,9 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @MappedSuperclass
 public abstract class AbstractTransfer {
 

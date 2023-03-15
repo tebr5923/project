@@ -20,7 +20,6 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor

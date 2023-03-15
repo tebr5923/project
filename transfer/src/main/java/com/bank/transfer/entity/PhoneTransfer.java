@@ -12,18 +12,23 @@ import lombok.ToString;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @ToString
-@EqualsAndHashCode(of = "phoneNumber", callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "phone_transfer")
 public class PhoneTransfer extends AbstractTransfer{
+
+    public PhoneTransfer(Long id, BigDecimal amount, String purpose, Long accountDetailsId, Long phoneNumber) {
+        super(id, amount, purpose, accountDetailsId);
+        this.phoneNumber = phoneNumber;
+    }
 
     @Column(name = "phone_number", nullable = false)
     private Long phoneNumber;
