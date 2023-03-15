@@ -26,7 +26,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "audit")
+@Table(name = "audit", schema = "transfer")
 public class Audit {
 
     @Id

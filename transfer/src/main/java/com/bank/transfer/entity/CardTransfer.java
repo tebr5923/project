@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "card_transfer")
+@Table(name = "card_transfer", schema = "transfer")
 public class CardTransfer extends AbstractTransfer{
 
     public CardTransfer(Long id, BigDecimal amount, String purpose, Long accountDetailsId, Long cardNumber) {
