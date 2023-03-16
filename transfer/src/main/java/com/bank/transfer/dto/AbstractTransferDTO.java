@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @ToString
@@ -15,10 +16,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public abstract class AbstractTransferDTO {
 
+    @NotNull(message = "amount must not be empty")
     protected BigDecimal amount;
 
     protected String purpose;
 
+    @NotNull(message = "accountDetailsId must not be empty")
     protected Long accountDetailsId;
 
 }

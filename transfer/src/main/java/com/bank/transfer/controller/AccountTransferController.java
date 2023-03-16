@@ -1,13 +1,17 @@
 package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.AccountTransferDTO;
+import com.bank.transfer.exception.AccountTransferException;
 import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.mapper.AccountTransferMapper;
 import com.bank.transfer.service.AccountTransferService;
+import com.bank.transfer.validator.AccountTransferValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +32,14 @@ import java.util.stream.Collectors;
 public class AccountTransferController {
 
     private final AccountTransferService accountTransferService;
+    private final AccountTransferValidator validator;
 
     @Autowired
-    public AccountTransferController(AccountTransferService accountTransferService) {
+    public AccountTransferController(AccountTransferService accountTransferService, AccountTransferValidator validator) {
         this.accountTransferService = accountTransferService;
+        this.validator = validator;
     }
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AccountTransferDTO>> list() {
@@ -41,6 +49,7 @@ public class AccountTransferController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
+
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountTransferDTO> getById(@PathVariable("id") Long id) {
@@ -52,22 +61,42 @@ public class AccountTransferController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @ResponseStatus(HttpStatus.CREATED) //201
-    public ResponseEntity<AccountTransferDTO> create(@RequestBody AccountTransferDTO dto) {
+    public ResponseEntity<AccountTransferDTO> create(@RequestBody @Valid AccountTransferDTO dto, BindingResult bindingResult) {
         var accountTransfer = AccountTransferMapper.MAPPER.ToEntity(dto);
+
+        validator.validate(accountTransfer, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new AccountTransferException(getErrorsMessage(bindingResult));
+        }
+
         accountTransferService.save(accountTransfer);
         var savedDto = AccountTransferMapper.MAPPER.ToDTO(accountTransfer);
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);//201
     }
 
+
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountTransferDTO> update(@PathVariable("id") Long id, @RequestBody AccountTransferDTO dto) {
+    public ResponseEntity<AccountTransferDTO> update(@PathVariable("id") Long id,
+                                                     @RequestBody @Valid AccountTransferDTO dto,
+                                                     BindingResult bindingResult) {
+        accountTransferService.getById(id)
+                .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
+
         var accountTransfer = AccountTransferMapper.MAPPER.ToEntity(dto);
+
+        validator.validate(accountTransfer, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new AccountTransferException(getErrorsMessage(bindingResult));
+        }
+
         accountTransferService.update(id, accountTransfer);
         var updatedDto = AccountTransferMapper.MAPPER.ToDTO(accountTransfer);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
+
 
     @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountTransferDTO> patchUpdate(@PathVariable("id") Long id, @RequestBody AccountTransferDTO dto) {
@@ -92,10 +121,25 @@ public class AccountTransferController {
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         accountTransferService.deleteById(id);
     }
 
+
+    private String getErrorsMessage(BindingResult bindingResult) {
+        StringBuilder massages = new StringBuilder();
+
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError error : fieldErrors) {
+            massages.append(" ")
+                    .append(error.getField())
+                    .append(" - ")
+                    .append(error.getDefaultMessage() == null ? error.getCode() : error.getDefaultMessage())
+                    .append(";");
+        }
+        return massages.toString();
+    }
 }

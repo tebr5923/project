@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
+
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Getter
@@ -13,6 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class AccountTransferDTO extends AbstractTransferDTO {
 
+    @NotNull(message = "accountNumber must not be empty")
     private Long accountNumber;
 
 }

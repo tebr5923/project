@@ -15,6 +15,8 @@ public interface AccountTransferService {
 
     Optional<AccountTransfer> getById(Long id);
 
+    Optional<AccountTransfer> getByAccountNumber(Long accountNumber);
+
     List<AccountTransfer> getAll();
 
 }

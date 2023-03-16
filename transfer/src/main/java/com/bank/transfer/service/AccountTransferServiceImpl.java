@@ -45,6 +45,11 @@ public class AccountTransferServiceImpl implements AccountTransferService{
     }
 
     @Override
+    public Optional<AccountTransfer> getByAccountNumber(Long accountNumber) {
+        return accountTransferRepository.getByAccountNumber(accountNumber);
+    }
+
+    @Override
     public List<AccountTransfer> getAll() {
         return accountTransferRepository.findAll();
     }
