@@ -7,6 +7,5 @@ import java.util.Optional;
 
 public interface AccountTransferRepository extends JpaRepository<AccountTransfer, Long> {
 
-    //Optional<AccountTransfer> getAccountTransferByAccountNumber(Long accountNumber);
     Optional<AccountTransfer> getByAccountNumber(Long accountNumber);
 }
