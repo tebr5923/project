@@ -2,11 +2,13 @@ package com.bank.transfer.validator;
 
 import com.bank.transfer.entity.AccountTransfer;
 import com.bank.transfer.service.AccountTransferService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Slf4j
 @Component
 public class AccountTransferValidator implements Validator {
 
@@ -25,12 +27,14 @@ public class AccountTransferValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         AccountTransfer accountTransfer = (AccountTransfer) target;
+        log.trace("try to validate accountTransfer: {}", accountTransfer);
         service.getByAccountNumber(accountTransfer.getAccountNumber())
                 .ifPresent((value) -> errors.rejectValue(
                         "accountNumber",
                         String.format("accountNumber %s already exist!", value),
                         String.format("accountNumber %s already exist!", value))
                 );
+        log.trace("success validate accountTransfer: {}", accountTransfer);
     }
 
 }
