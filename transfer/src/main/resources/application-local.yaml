@@ -27,3 +27,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+logging:
+  level:
+    root: INFO
+#  file:
+#    name: account-transfer.log
+#    path: /
