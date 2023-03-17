@@ -1,9 +1,11 @@
 package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.AccountTransferDTO;
+import com.bank.transfer.dto.PatchAccountTransferDTO;
 import com.bank.transfer.exception.AccountTransferException;
 import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.mapper.AccountTransferMapper;
+import com.bank.transfer.mapper.PatchAccountTransferMapper;
 import com.bank.transfer.service.AccountTransferService;
 import com.bank.transfer.validator.AccountTransferValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,11 +101,19 @@ public class AccountTransferController {
 
 
     @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountTransferDTO> patchUpdate(@PathVariable("id") Long id, @RequestBody AccountTransferDTO dto) {
+    public ResponseEntity<PatchAccountTransferDTO> patchUpdate(@PathVariable("id") Long id,
+                                                          @RequestBody @Valid PatchAccountTransferDTO dto,
+                                                          BindingResult bindingResult) {
         var accountTransferFromDB =
                 accountTransferService.getById(id)
                         .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
-        var accountTransfer = AccountTransferMapper.MAPPER.ToEntity(dto);
+        var accountTransfer = PatchAccountTransferMapper.MAPPER.ToEntity(dto);
+
+        validator.validate(accountTransfer, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new AccountTransferException(getErrorsMessage(bindingResult));
+        }
+
         if (accountTransfer.getAmount() != null) {
             accountTransferFromDB.setAmount(accountTransfer.getAmount());
         }
@@ -117,7 +127,7 @@ public class AccountTransferController {
             accountTransferFromDB.setAccountNumber(accountTransfer.getAccountNumber());
         }
         accountTransferService.update(id, accountTransferFromDB);
-        var updatedDto = AccountTransferMapper.MAPPER.ToDTO(accountTransferFromDB);
+        var updatedDto = PatchAccountTransferMapper.MAPPER.ToDTO(accountTransferFromDB);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
