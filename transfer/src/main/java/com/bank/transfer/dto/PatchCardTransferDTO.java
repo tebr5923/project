@@ -12,8 +12,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatchAccountTransferDTO extends AbstractPatchTransferDTO{
+public class PatchCardTransferDTO extends AbstractPatchTransferDTO{
 
-    private Long accountNumber;
+    private Long cardNumber;
 
 }

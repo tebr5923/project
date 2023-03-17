@@ -1,19 +1,21 @@
 package com.bank.transfer.dto;
 
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
+
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatchAccountTransferDTO extends AbstractPatchTransferDTO{
+public class PhoneTransferDTO extends AbstractTransferDTO {
 
-    private Long accountNumber;
+    @NotNull(message = "phoneNumber must not be empty")
+    private Long phoneNumber;
 
 }

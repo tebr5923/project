@@ -1,19 +1,24 @@
 package com.bank.transfer.dto;
 
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatchAccountTransferDTO extends AbstractPatchTransferDTO{
+public abstract class AbstractPatchTransferDTO {
 
-    private Long accountNumber;
+    protected BigDecimal amount;
+
+    protected String purpose;
+
+    protected Long accountDetailsId;
 
 }
