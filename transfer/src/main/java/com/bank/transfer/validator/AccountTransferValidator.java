@@ -27,14 +27,14 @@ public class AccountTransferValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         AccountTransfer accountTransfer = (AccountTransfer) target;
-        log.trace("try to validate accountTransfer: {}", accountTransfer);
+        log.info("try to validate accountTransfer: {}", accountTransfer);
         service.getByAccountNumber(accountTransfer.getAccountNumber())
                 .ifPresent((value) -> errors.rejectValue(
                         "accountNumber",
-                        String.format("accountNumber %s already exist!", value),
-                        String.format("accountNumber %s already exist!", value))
+                        String.format("accountNumber %s already exist!", value.getAccountNumber()),
+                        String.format("accountNumber %s already exist!", value.getAccountNumber()))
                 );
-        log.trace("success validate accountTransfer: {}", accountTransfer);
+        log.info("success validate accountTransfer: {}", accountTransfer);
     }
 
 }
