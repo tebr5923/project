@@ -26,9 +26,9 @@ public class CardTransferServiceImpl implements TransferService<CardTransfer> {
     @Override
     @Transactional
     public void save(CardTransfer transfer) {
-        log.trace("try to save cardTransfer: {}", transfer);
+        log.info("try to save cardTransfer: {}", transfer);
         repository.save(transfer);
-        log.trace("save cardTransfer success, id={}", transfer.getId());
+        log.info("save cardTransfer success, id={}", transfer.getId());
     }
 
     @Override
@@ -36,42 +36,42 @@ public class CardTransferServiceImpl implements TransferService<CardTransfer> {
     public void update(Long id, CardTransfer transfer) {
         transfer.setId(id);
 
-        log.trace("try to update cardTransfer: {}", transfer);
+        log.info("try to update cardTransfer: {}", transfer);
         repository.save(transfer);
-        log.trace("update cardTransfer success, id={}", transfer.getId());
+        log.info("update cardTransfer success, id={}", transfer.getId());
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
-        log.trace("try to delete cardTransfer with id={}", id);
+        log.info("try to delete cardTransfer with id={}", id);
         repository.deleteById(id);
-        log.trace("success delete cardTransfer with id={}", id);
+        log.info("success delete cardTransfer with id={}", id);
     }
 
     @Override
     public Optional<CardTransfer> getById(Long id) {
-        log.trace("try to get cardTransfer by id={}", id);
+        log.info("try to get cardTransfer by id={}", id);
         var transfer = repository.findById(id);
-        log.trace("getById cardTransfer success, transfer.isPresent() = {}", transfer.isPresent());
+        log.info("getById cardTransfer success, transfer.isPresent() = {}", transfer.isPresent());
 
         return transfer;
     }
 
     @Override
     public Optional<CardTransfer> getByNumber(Long number) {
-        log.trace("try to get cardTransfer by cardNumber={}", number);
+        log.info("try to get cardTransfer by cardNumber={}", number);
         var transfer = repository.getByCardNumber(number);
-        log.trace("getByNumber cardTransfer success, transfer.isPresent() = {}", transfer.isPresent());
+        log.info("getByNumber cardTransfer success, transfer.isPresent() = {}", transfer.isPresent());
 
         return transfer;
     }
 
     @Override
     public List<CardTransfer> getAll() {
-        log.trace("try to get All cardTransfers");
+        log.info("try to get All cardTransfers");
         var transfers =repository.findAll();
-        log.trace("getAll cardTransfers success, count = {}", transfers.size());
+        log.info("getAll cardTransfers success, count = {}", transfers.size());
 
         return transfers;
     }
