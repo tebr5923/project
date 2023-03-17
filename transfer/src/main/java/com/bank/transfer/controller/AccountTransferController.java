@@ -1,7 +1,7 @@
 package com.bank.transfer.controller;
 
-import com.bank.transfer.dto.AccountTransferDTO;
-import com.bank.transfer.dto.PatchAccountTransferDTO;
+import com.bank.transfer.dto.transfer.AccountTransferDTO;
+import com.bank.transfer.dto.transfer.PatchAccountTransferDTO;
 import com.bank.transfer.exception.AccountTransferException;
 import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.mapper.AccountTransferMapper;

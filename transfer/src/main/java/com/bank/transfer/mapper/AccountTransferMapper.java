@@ -1,6 +1,6 @@
 package com.bank.transfer.mapper;
 
-import com.bank.transfer.dto.AccountTransferDTO;
+import com.bank.transfer.dto.transfer.AccountTransferDTO;
 import com.bank.transfer.entity.AccountTransfer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

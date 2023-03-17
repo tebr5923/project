@@ -1,4 +1,4 @@
-package com.bank.transfer.dto;
+package com.bank.transfer.dto.transfer;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

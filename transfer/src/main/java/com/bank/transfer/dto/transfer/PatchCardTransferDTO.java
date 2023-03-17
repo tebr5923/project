@@ -1,4 +1,4 @@
-package com.bank.transfer.dto;
+package com.bank.transfer.dto.transfer;
 
 
 import lombok.EqualsAndHashCode;
@@ -12,8 +12,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatchAccountTransferDTO extends AbstractPatchTransferDTO{
+public class PatchCardTransferDTO extends AbstractPatchTransferDTO{
 
-    private Long accountNumber;
+    private Long cardNumber;
 
 }
