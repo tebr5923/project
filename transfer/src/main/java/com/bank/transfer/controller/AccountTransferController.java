@@ -7,13 +7,13 @@ import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.mapper.AccountTransferMapper;
 import com.bank.transfer.mapper.PatchAccountTransferMapper;
 import com.bank.transfer.service.AccountTransferService;
+import com.bank.transfer.utils.Utils;
 import com.bank.transfer.validator.AccountTransferValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/account_transfers")
@@ -71,7 +72,7 @@ public class AccountTransferController {
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new AccountTransferException(getErrorsMessage(bindingResult));
+            throw new AccountTransferException(Utils.getErrorsMessage(bindingResult));
         }
 
         accountTransferService.save(accountTransfer);
@@ -91,7 +92,7 @@ public class AccountTransferController {
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new AccountTransferException(getErrorsMessage(bindingResult));
+            throw new AccountTransferException(Utils.getErrorsMessage(bindingResult));
         }
 
         accountTransferService.update(id, accountTransfer);
@@ -111,7 +112,7 @@ public class AccountTransferController {
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new AccountTransferException(getErrorsMessage(bindingResult));
+            throw new AccountTransferException(Utils.getErrorsMessage(bindingResult));
         }
 
         if (accountTransfer.getAmount() != null) {
@@ -138,18 +139,4 @@ public class AccountTransferController {
         accountTransferService.deleteById(id);
     }
 
-
-    private String getErrorsMessage(BindingResult bindingResult) {
-        StringBuilder massages = new StringBuilder();
-
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError error : fieldErrors) {
-            massages.append(" ")
-                    .append(error.getField())
-                    .append(" - ")
-                    .append(error.getDefaultMessage() == null ? error.getCode() : error.getDefaultMessage())
-                    .append(";");
-        }
-        return massages.toString();
-    }
 }
