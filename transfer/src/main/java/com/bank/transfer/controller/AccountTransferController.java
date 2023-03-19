@@ -8,7 +8,7 @@ import com.bank.transfer.mapper.AccountTransferMapper;
 import com.bank.transfer.mapper.PatchAccountTransferMapper;
 import com.bank.transfer.service.AccountTransferService;
 import com.bank.transfer.utils.Utils;
-import com.bank.transfer.validator.AccountTransferValidator;
+import com.bank.transfer.validator.AccountTransferAccountNumberUniqueValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
 public class AccountTransferController {
 
     private final AccountTransferService accountTransferService;
-    private final AccountTransferValidator validator;
+    private final AccountTransferAccountNumberUniqueValidator validator;
 
     @Autowired
-    public AccountTransferController(AccountTransferService accountTransferService, AccountTransferValidator validator) {
+    public AccountTransferController(AccountTransferService accountTransferService, AccountTransferAccountNumberUniqueValidator validator) {
         this.accountTransferService = accountTransferService;
         this.validator = validator;
     }

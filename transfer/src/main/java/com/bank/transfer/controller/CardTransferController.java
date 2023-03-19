@@ -10,7 +10,7 @@ import com.bank.transfer.mapper.CardTransferMapper;
 import com.bank.transfer.mapper.PatchCardTransferMapper;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.utils.Utils;
-import com.bank.transfer.validator.CardTransferValidator;
+import com.bank.transfer.validator.CardTransferCardNumberUniqueValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,11 +37,11 @@ import java.util.stream.Collectors;
 public class CardTransferController {
 
     private final TransferService<CardTransfer> transferService;
-    private final CardTransferValidator validator;
+    private final CardTransferCardNumberUniqueValidator validator;
 
 
     @Autowired
-    public CardTransferController(TransferService<CardTransfer> transferService, CardTransferValidator validator) {
+    public CardTransferController(TransferService<CardTransfer> transferService, CardTransferCardNumberUniqueValidator validator) {
         this.transferService = transferService;
         this.validator = validator;
     }

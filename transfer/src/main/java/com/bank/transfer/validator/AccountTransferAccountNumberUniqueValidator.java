@@ -10,12 +10,12 @@ import org.springframework.validation.Validator;
 
 @Slf4j
 @Component
-public class AccountTransferValidator implements Validator {
+public class AccountTransferAccountNumberUniqueValidator implements Validator {
 
     private final AccountTransferService service;
 
     @Autowired
-    public AccountTransferValidator(AccountTransferService service) {
+    public AccountTransferAccountNumberUniqueValidator(AccountTransferService service) {
         this.service = service;
     }
 
