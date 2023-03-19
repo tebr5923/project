@@ -45,6 +45,10 @@ public class CardTransferCardNumberUniqueValidator implements Validator {
     }
 
     private boolean isSameTransfer(CardTransfer validated, CardTransfer fromDB) {
+        //if its save and id is null - its not same transfer
+        if (validated.getId() == null) {
+            return false;
+        }
         return validated.getId().equals(fromDB.getId());
     }
 

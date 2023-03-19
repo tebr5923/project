@@ -2,11 +2,12 @@ package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.transfer.AccountTransferDTO;
 import com.bank.transfer.dto.transfer.PatchAccountTransferDTO;
+import com.bank.transfer.entity.AccountTransfer;
 import com.bank.transfer.exception.AccountTransferValidationException;
 import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.mapper.AccountTransferMapper;
 import com.bank.transfer.mapper.PatchAccountTransferMapper;
-import com.bank.transfer.service.AccountTransferService;
+import com.bank.transfer.service.TransferService;
 import com.bank.transfer.utils.Utils;
 import com.bank.transfer.validator.AccountTransferAccountNumberUniqueValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/account_transfers")
 public class AccountTransferController {
 
-    private final AccountTransferService accountTransferService;
+    private final TransferService<AccountTransfer> accountTransferService;
     private final AccountTransferAccountNumberUniqueValidator validator;
 
     @Autowired
-    public AccountTransferController(AccountTransferService accountTransferService, AccountTransferAccountNumberUniqueValidator validator) {
+    public AccountTransferController(TransferService<AccountTransfer> accountTransferService, AccountTransferAccountNumberUniqueValidator validator) {
         this.accountTransferService = accountTransferService;
         this.validator = validator;
     }

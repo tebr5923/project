@@ -1,7 +1,7 @@
 package com.bank.transfer.validator;
 
 import com.bank.transfer.entity.AccountTransfer;
-import com.bank.transfer.service.AccountTransferService;
+import com.bank.transfer.service.TransferService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,10 +12,10 @@ import org.springframework.validation.Validator;
 @Component
 public class AccountTransferAccountNumberUniqueValidator implements Validator {
 
-    private final AccountTransferService service;
+    private final TransferService<AccountTransfer> service;
 
     @Autowired
-    public AccountTransferAccountNumberUniqueValidator(AccountTransferService service) {
+    public AccountTransferAccountNumberUniqueValidator(TransferService<AccountTransfer> service) {
         this.service = service;
     }
 
@@ -28,7 +28,7 @@ public class AccountTransferAccountNumberUniqueValidator implements Validator {
     public void validate(Object target, Errors errors) {
         AccountTransfer accountTransfer = (AccountTransfer) target;
         log.info("try to validate accountTransfer: {}", accountTransfer);
-        service.getByAccountNumber(accountTransfer.getAccountNumber())
+        service.getByNumber(accountTransfer.getAccountNumber())
                 .ifPresent((value) -> validateAccountNumber(accountTransfer, value, errors)
                 );
         log.info("success validate accountTransfer: {}", accountTransfer);
@@ -44,6 +44,10 @@ public class AccountTransferAccountNumberUniqueValidator implements Validator {
     }
 
     private boolean isSameTransfer(AccountTransfer validated, AccountTransfer fromDB) {
+        //if its save and id is null - its not same transfer
+        if (validated.getId() == null) {
+            return false;
+        }
         return validated.getId().equals(fromDB.getId());
     }
 

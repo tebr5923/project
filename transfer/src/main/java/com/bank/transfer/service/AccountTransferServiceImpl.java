@@ -13,8 +13,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-public class AccountTransferServiceImpl implements AccountTransferService {
-    // TODO: 18.03.2023  need refactoring with impl TransferService
+public class AccountTransferServiceImpl implements TransferService<AccountTransfer> {
 
     private final AccountTransferRepository accountTransferRepository;
 
@@ -59,7 +58,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
     }
 
     @Override
-    public Optional<AccountTransfer> getByAccountNumber(Long accountNumber) {
+    public Optional<AccountTransfer> getByNumber(Long accountNumber) {
         log.info("try to get accountTransfer by accountNumber={}", accountNumber);
         var accountTransfer = accountTransferRepository.getByAccountNumber(accountNumber);
         log.info("getByAccountNumber accountTransfer success, accountTransfer.isPresent() = {}", accountTransfer.isPresent());
