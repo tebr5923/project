@@ -1,6 +1,6 @@
 package com.bank.transfer.handler;
 
-import com.bank.transfer.exception.CardTransferException;
+import com.bank.transfer.exception.CardTransferValidationException;
 import com.bank.transfer.exception.CardTransferNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,8 @@ public class CardTransferControllerExceptionHandler extends ResponseEntityExcept
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CardTransferException.class)
-    public ResponseEntity<String> handleCardTransferException(CardTransferException e) {
+    @ExceptionHandler(CardTransferValidationException.class)
+    public ResponseEntity<String> handleCardTransferException(CardTransferValidationException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }

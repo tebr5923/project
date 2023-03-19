@@ -2,7 +2,7 @@ package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.transfer.AccountTransferDTO;
 import com.bank.transfer.dto.transfer.PatchAccountTransferDTO;
-import com.bank.transfer.exception.AccountTransferException;
+import com.bank.transfer.exception.AccountTransferValidationException;
 import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.mapper.AccountTransferMapper;
 import com.bank.transfer.mapper.PatchAccountTransferMapper;
@@ -72,7 +72,7 @@ public class AccountTransferController {
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new AccountTransferException(Utils.getErrorsMessage(bindingResult));
+            throw new AccountTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         accountTransferService.save(accountTransfer);
@@ -93,7 +93,7 @@ public class AccountTransferController {
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new AccountTransferException(Utils.getErrorsMessage(bindingResult));
+            throw new AccountTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         accountTransferService.update(id, accountTransfer);
@@ -114,7 +114,7 @@ public class AccountTransferController {
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new AccountTransferException(Utils.getErrorsMessage(bindingResult));
+            throw new AccountTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         if (accountTransfer.getAmount() != null) {

@@ -3,8 +3,8 @@ package com.bank.transfer.controller;
 import com.bank.transfer.dto.transfer.CardTransferDTO;
 import com.bank.transfer.dto.transfer.PatchCardTransferDTO;
 import com.bank.transfer.entity.CardTransfer;
-import com.bank.transfer.exception.AccountTransferException;
-import com.bank.transfer.exception.CardTransferException;
+import com.bank.transfer.exception.AccountTransferValidationException;
+import com.bank.transfer.exception.CardTransferValidationException;
 import com.bank.transfer.exception.CardTransferNotFoundException;
 import com.bank.transfer.mapper.CardTransferMapper;
 import com.bank.transfer.mapper.PatchCardTransferMapper;
@@ -75,7 +75,7 @@ public class CardTransferController {
 
         validator.validate(transfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new CardTransferException(Utils.getErrorsMessage(bindingResult));
+            throw new CardTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         transferService.save(transfer);
@@ -96,7 +96,7 @@ public class CardTransferController {
 
         validator.validate(transfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new AccountTransferException(Utils.getErrorsMessage(bindingResult));
+            throw new AccountTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         transferService.update(id, transfer);
@@ -117,7 +117,7 @@ public class CardTransferController {
 
         validator.validate(transfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new CardTransferException(Utils.getErrorsMessage(bindingResult));
+            throw new CardTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         if (transfer.getAmount() != null) {
