@@ -28,13 +28,26 @@ public class CardTransferValidator implements Validator {
     public void validate(Object target, Errors errors) {
         CardTransfer cardTransfer = (CardTransfer) target;
         log.info("try to validate cardTransfer: {}", cardTransfer);
+
         service.getByNumber(cardTransfer.getCardNumber())
-                .ifPresent((value) -> errors.rejectValue(
-                        "cardNumber",
-                        String.format("cardNumber %s already exist!", value.getCardNumber()),
-                        String.format("cardNumber %s already exist!", value.getCardNumber()))
+                .ifPresent((value) -> validateCardNumber(cardTransfer, value, errors)
                 );
         log.info("success validate cardTransfer: {}", cardTransfer);
     }
 
+    private void validateCardNumber(CardTransfer validated, CardTransfer fromDB, Errors errors) {
+        if (!isSameTransfer(validated, fromDB)) {
+            errors.rejectValue(
+                    "cardNumber",
+                    String.format("cardNumber %s already exist!", fromDB.getCardNumber()),
+                    String.format("cardNumber %s already exist!", fromDB.getCardNumber()));
+        }
+    }
+
+    private boolean isSameTransfer(CardTransfer validated, CardTransfer fromDB) {
+        return validated.getId().equals(fromDB.getId());
+    }
+
 }
+
+

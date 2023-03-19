@@ -29,12 +29,22 @@ public class AccountTransferValidator implements Validator {
         AccountTransfer accountTransfer = (AccountTransfer) target;
         log.info("try to validate accountTransfer: {}", accountTransfer);
         service.getByAccountNumber(accountTransfer.getAccountNumber())
-                .ifPresent((value) -> errors.rejectValue(
-                        "accountNumber",
-                        String.format("accountNumber %s already exist!", value.getAccountNumber()),
-                        String.format("accountNumber %s already exist!", value.getAccountNumber()))
+                .ifPresent((value) -> validateAccountNumber(accountTransfer, value, errors)
                 );
         log.info("success validate accountTransfer: {}", accountTransfer);
+    }
+
+    private void validateAccountNumber(AccountTransfer validated, AccountTransfer fromDB, Errors errors) {
+        if (!isSameTransfer(validated, fromDB)) {
+            errors.rejectValue(
+                    "accountNumber",
+                    String.format("accountNumber %s already exist!", fromDB.getAccountNumber()),
+                    String.format("accountNumber %s already exist!", fromDB.getAccountNumber()));
+        }
+    }
+
+    private boolean isSameTransfer(AccountTransfer validated, AccountTransfer fromDB) {
+        return validated.getId().equals(fromDB.getId());
     }
 
 }

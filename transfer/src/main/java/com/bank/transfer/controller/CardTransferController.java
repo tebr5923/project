@@ -92,6 +92,7 @@ public class CardTransferController {
                 .orElseThrow(() -> new CardTransferNotFoundException(String.format("cardTransfer with id= %d not found", id)));
 
         var transfer = CardTransferMapper.MAPPER.ToEntity(dto);
+        transfer.setId(id);// for validation
 
         validator.validate(transfer, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -112,6 +113,7 @@ public class CardTransferController {
                 transferService.getById(id)
                         .orElseThrow(() -> new CardTransferNotFoundException(String.format("cardTransfer with id= %d not found", id)));
         var transfer = PatchCardTransferMapper.MAPPER.ToEntity(dto);
+        transfer.setId(id);// for validation
 
         validator.validate(transfer, bindingResult);
         if (bindingResult.hasErrors()) {

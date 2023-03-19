@@ -89,6 +89,7 @@ public class AccountTransferController {
                 .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
 
         var accountTransfer = AccountTransferMapper.MAPPER.ToEntity(dto);
+        accountTransfer.setId(id);// for validation
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -109,6 +110,7 @@ public class AccountTransferController {
                 accountTransferService.getById(id)
                         .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
         var accountTransfer = PatchAccountTransferMapper.MAPPER.ToEntity(dto);
+        accountTransfer.setId(id);// for validation
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
