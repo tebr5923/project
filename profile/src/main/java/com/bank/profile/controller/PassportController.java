@@ -1,12 +1,13 @@
 package com.bank.profile.controller;
 
 import com.bank.profile.dto.PassportDTO;
-import com.bank.profile.entity.Passport;
 import com.bank.profile.mappers.PassportMapper;
 import com.bank.profile.service.serviceInterface.PassportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +29,16 @@ public class PassportController {
             summary = "Получение всех объектов Passport в формате PassportDTO.",
             description = "Получение всех объектов PassportDTO, в том числе связанной сущности ActualRegistrationDTO. В методе через stream.api каждый объект Passport приводится к PassportDTO."
     )
-    public List<PassportDTO> getAllPassport() {
-        return passportService.getAllPassport().stream().map(PassportMapper.INSTANCE::toPassportDTO).collect(Collectors.toList());
+    public ResponseEntity<List<PassportDTO>> getAllPassport() {
+        List<PassportDTO> allPassportDTO;
+
+        allPassportDTO = passportService
+                .getAllPassport()
+                .stream()
+                .map(PassportMapper.INSTANCE::toPassportDTO)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allPassportDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -37,8 +46,12 @@ public class PassportController {
             summary = "Получение конкретного объекта Passport в формате PassportDTO, через его id.",
             description = "Получение объекта PassportDTO, в том числе связанной сущности ActualRegistrationDTO, через passport.id."
     )
-    public PassportDTO getPassport(@PathVariable Long id) {
-        return PassportMapper.INSTANCE.toPassportDTO(passportService.findPassportById(id));
+    public ResponseEntity<PassportDTO> getPassport(@PathVariable Long id) {
+        PassportDTO passportDTO = PassportMapper
+                .INSTANCE
+                .toPassportDTO(passportService.findPassportById(id));
+
+        return new ResponseEntity<>(passportDTO, HttpStatus.OK);
     }
 
     @PostMapping("/")
@@ -46,19 +59,35 @@ public class PassportController {
             summary = "Сохранение в бд нового объекта Passport.",
             description = "Сохранение в бд нового объекта Passport."
     )
-    public Passport createPassport(@RequestBody Passport passport) {
-        passportService.savePassport(passport);
-        return passport;
+    public ResponseEntity<PassportDTO> createPassport(@RequestBody PassportDTO passportDTO) {
+
+        passportService.savePassport(
+                PassportMapper.INSTANCE.toPassport(passportDTO));
+
+        return new ResponseEntity<>(passportDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Обновление существующего объекта Passport.",
             description = "Обновление существующего объекта Passport."
     )
-    public Passport editPassport(@RequestBody Passport passport) {
-        passportService.editPassport(passport);
-        return passport;
+    public ResponseEntity<PassportDTO> editPassport(@PathVariable Long id,
+                                                    @RequestBody PassportDTO passportDTO) {
+        passportService.editPassport(id,
+                PassportMapper.INSTANCE.toPassport(passportDTO));
+
+        return new ResponseEntity<>(passportDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Удаление существующего объекта Passport.",
+            description = "Удаление существующего объекта Passport."
+    )
+    public ResponseEntity<HttpStatus> deleteRegistration(@PathVariable Long id) {
+        passportService.deletePassport(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

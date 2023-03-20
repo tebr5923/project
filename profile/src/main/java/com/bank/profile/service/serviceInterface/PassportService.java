@@ -9,7 +9,7 @@ public interface PassportService {
 
     Passport findPassportById(long passportId);
 
-    void editPassport(Passport passport);
+    void editPassport(Long id, Passport passport);
 
     void deletePassport(long passportId);
 

@@ -7,10 +7,14 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
-//Все URL к докам стандартные, ссылки в HELP.md
+/**
+ * Класс конфигурации swagger.
+ * Все URL к докам стандартные, ссылки в HELP.md
+ */
 @Configuration
 public class SwaggerConfig {
+
+    //Бин настраивает название, версию и автора для swagger.
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(
@@ -20,4 +24,5 @@ public class SwaggerConfig {
                         .contact(
                                 new Contact().name("Ivan Pereverzev")));
     }
+
 }

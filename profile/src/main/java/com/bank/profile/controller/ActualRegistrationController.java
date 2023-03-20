@@ -1,7 +1,6 @@
 package com.bank.profile.controller;
 
 import com.bank.profile.dto.ActualRegistrationDTO;
-import com.bank.profile.entity.ActualRegistration;
 import com.bank.profile.mappers.ActualRegistrationMapper;
 import com.bank.profile.service.serviceInterface.ActualRegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,8 +28,16 @@ public class ActualRegistrationController {
             summary = "Получение всех объектов ActualRegistration в формате ActualRegistrationDTO.",
             description = "Получение всех объектов ActualRegistrationDTO. В методе через stream.api каждый объект ActualRegistration приводится к ActualRegistrationDTO."
     )
-    public List<ActualRegistrationDTO> getAllActualRegistration() {
-        return actualRegistrationService.getAllActualRegistration().stream().map(ActualRegistrationMapper.INSTANCE::toActualRegistrationDTO).collect(Collectors.toList());
+    public ResponseEntity<List<ActualRegistrationDTO>> getAllActualRegistration() {
+        List<ActualRegistrationDTO> allActualRegistrationDTO;
+
+        allActualRegistrationDTO = actualRegistrationService
+                .getAllActualRegistration()
+                .stream()
+                .map(ActualRegistrationMapper.INSTANCE::toActualRegistrationDTO)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allActualRegistrationDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -38,8 +45,12 @@ public class ActualRegistrationController {
             summary = "Получение конкретного объекта ActualRegistration в формате ActualRegistrationDTO, через его id.",
             description = "Получение объекта ActualRegistrationDTO через actualRegistration.id."
     )
-    public ActualRegistrationDTO getActualRegistration(@PathVariable Long id) {
-        return ActualRegistrationMapper.INSTANCE.toActualRegistrationDTO(actualRegistrationService.findActualRegistrationById(id));
+    public ResponseEntity<ActualRegistrationDTO> getActualRegistration(@PathVariable Long id) {
+        ActualRegistrationDTO actualRegistrationDTO = ActualRegistrationMapper
+                .INSTANCE
+                .toActualRegistrationDTO(actualRegistrationService.findActualRegistrationById(id));
+
+        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.OK);
     }
 
     @PostMapping("/")
@@ -47,19 +58,25 @@ public class ActualRegistrationController {
             summary = "Сохранение в бд нового объекта ActualRegistration.",
             description = "Сохранение в бд нового объекта ActualRegistration."
     )
-    public ActualRegistration createActualRegistration(@RequestBody ActualRegistration actualRegistration) {
-        actualRegistrationService.saveActualRegistration(actualRegistration);
-        return actualRegistration;
+    public ResponseEntity<ActualRegistrationDTO> createActualRegistration(@RequestBody ActualRegistrationDTO actualRegistrationDTO) {
+
+        actualRegistrationService.saveActualRegistration(
+                ActualRegistrationMapper.INSTANCE.toActualRegistration(actualRegistrationDTO));
+
+        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Обновление существующего объекта ActualRegistration.",
             description = "Обновление существующего объекта ActualRegistration."
     )
-    public ActualRegistration editActualRegistration(@RequestBody ActualRegistration actualRegistration) {
-        actualRegistrationService.editActualRegistration(actualRegistration);
-        return actualRegistration;
+    public ResponseEntity<ActualRegistrationDTO> editActualRegistration(@PathVariable Long id,
+                                                                        @RequestBody ActualRegistrationDTO actualRegistrationDTO) {
+        actualRegistrationService.editActualRegistration(id,
+                ActualRegistrationMapper.INSTANCE.toActualRegistration(actualRegistrationDTO));
+
+        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -69,6 +86,6 @@ public class ActualRegistrationController {
     )
     public ResponseEntity<HttpStatus> deleteActualRegistration(@PathVariable Long id) {
         actualRegistrationService.deleteActualRegistration(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

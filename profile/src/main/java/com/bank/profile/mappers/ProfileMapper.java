@@ -13,8 +13,10 @@ public interface ProfileMapper {
 
     @Mapping(target = "passport", source = "passportId")
     @Mapping(target = "passport.registration", source = "passportId.registrationId")
+    @Mapping(target = "actualRegistration", source = "actualRegistrationId")
     ProfileDTO toProfileDTO(Profile profile);
     @Mapping(target = "passportId", source = "passport")
     @Mapping(target = "passportId.registrationId", source = "passport.registration")
+    @Mapping(target = "actualRegistrationId", source = "actualRegistration")
     Profile toProfile(ProfileDTO profileDTO);
 }

@@ -8,7 +8,6 @@ import com.bank.profile.service.serviceInterface.AuditService;
 import com.bank.profile.service.serviceInterface.ProfileService;
 import com.bank.profile.entity.audit.OperationType;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +35,16 @@ public class ProfileController {
             summary = "Получение всех объектов Profile в формате ProfileDTO.",
             description = "Получение всех объектов ProfileDTO, в том числе связанных сущностей PassportDTO и ActualRegistrationDTO. В методе через stream.api каждый объект Profile приводится к ProfileDTO."
     )
-    public List<ProfileDTO> getAllProfile() {
-        return profileService.getAllProfile().stream().map(ProfileMapper.INSTANCE::toProfileDTO).collect(Collectors.toList());
+    public ResponseEntity<List<ProfileDTO>> getAllProfile() {
+        List<ProfileDTO> allProfileDTO;
+
+        allProfileDTO = profileService
+                .getAllProfile()
+                .stream()
+                .map(ProfileMapper.INSTANCE::toProfileDTO)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(allProfileDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -45,8 +52,12 @@ public class ProfileController {
             summary = "Получение конкретного объекта Profile в формате ProfileDTO, через его id.",
             description = "Получение объекта ProfileDTO, в том числе связанных сущностей PassportDTO и ActualRegistrationDTO, через profile.id."
     )
-    public ProfileDTO getProfile(@PathVariable @Parameter(description = "id профиля") Long id) {
-        return ProfileMapper.INSTANCE.toProfileDTO(profileService.findProfileById(id));
+    public ResponseEntity<ProfileDTO> getProfile(@PathVariable Long id) {
+        ProfileDTO profileDTO = ProfileMapper
+                .INSTANCE
+                .toProfileDTO(profileService.findProfileById(id));
+
+        return new ResponseEntity<>(profileDTO, HttpStatus.OK);
     }
 
 
@@ -55,25 +66,27 @@ public class ProfileController {
             summary = "Сохранение в бд нового объекта Profile.",
             description = "Сохранение в бд нового объекта Profile, а так же создание и сохранение объекта Audit."
     )
-    public Profile createProfile(@RequestBody Profile profile) {
+    public ResponseEntity<ProfileDTO> createProfile(@RequestBody ProfileDTO profileDTO) {
         Audit audit = new Audit();
         audit.setEntityType(Profile.class.getName());
         audit.setOperationType(OperationType.Save_entity.toString());
         audit.setNewEntityJson("new entity json");
         audit.setEntityJson("entity json");
 
-        profileService.saveProfile(profile);
+        profileService.saveProfile(
+                ProfileMapper.INSTANCE.toProfile(profileDTO));
         auditService.saveAudit(audit);
 
-        return profile;
+        return new ResponseEntity<>(profileDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Обновление существующего объекта Profile.",
             description = "Обновление существующего объекта Profile, а так же создание и сохранение объекта Audit."
     )
-    public Profile editProfile(@RequestBody Profile profile) {
+    public ResponseEntity<ProfileDTO> editProfile(@PathVariable Long id,
+                                                  @RequestBody ProfileDTO profileDTO) {
 
         Audit audit = new Audit();
         audit.setEntityType(Profile.class.getName());
@@ -81,10 +94,11 @@ public class ProfileController {
         audit.setNewEntityJson("new entity json");
         audit.setEntityJson("entity json");
 
-        profileService.editProfile(profile);
+        profileService.editProfile(id,
+                ProfileMapper.INSTANCE.toProfile(profileDTO));
         auditService.saveAudit(audit);
 
-        return profile;
+        return new ResponseEntity<>(profileDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -103,6 +117,6 @@ public class ProfileController {
         profileService.deleteProfile(id);
         auditService.saveAudit(audit);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

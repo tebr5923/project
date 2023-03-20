@@ -28,7 +28,8 @@ public class ActualRegistrationServiceImpl implements ActualRegistrationService 
     }
 
     @Override
-    public void editActualRegistration(ActualRegistration actualRegistration) {
+    public void editActualRegistration(Long id, ActualRegistration actualRegistration) {
+        actualRegistration.setId(id);
         actualRegistrationRepository.save(actualRegistration);
     }
 

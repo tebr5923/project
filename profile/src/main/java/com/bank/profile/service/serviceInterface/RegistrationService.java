@@ -10,7 +10,7 @@ public interface RegistrationService {
 
     Registration findRegistrationById(long registrationId);
 
-    void editRegistration(Registration registration);
+    void editRegistration(Long id, Registration registration);
 
     void deleteRegistration(long registrationId);
 

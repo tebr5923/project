@@ -29,7 +29,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public void editRegistration(Registration registration) {
+    public void editRegistration(Long id, Registration registration) {
+        registration.setId(id);
         registrationRepository.save(registration);
     }
 

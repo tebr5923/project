@@ -9,7 +9,7 @@ public interface AccountDetailsIdService {
 
     AccountDetailsId findAccountDetailsIdById(long accountDetailsIdId);
 
-    void editAccountDetailsId(AccountDetailsId accountDetailsId);
+    void editAccountDetailsId(Long id, AccountDetailsId accountDetailsId);
 
     void deleteAccountDetailsId(long accountDetailsIdId);
 

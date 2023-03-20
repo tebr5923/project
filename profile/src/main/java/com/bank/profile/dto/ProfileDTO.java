@@ -1,5 +1,6 @@
 package com.bank.profile.dto;
 
+import com.bank.profile.entity.ActualRegistration;
 import lombok.Data;
 
 @Data
@@ -10,5 +11,6 @@ public class ProfileDTO {
     long inn;
     long snils;
     PassportDTO passport;
+    ActualRegistrationDTO actualRegistration;
 
 }

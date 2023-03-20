@@ -1,7 +1,6 @@
 package com.bank.profile.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

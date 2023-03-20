@@ -29,7 +29,8 @@ public class PassportServiceImpl implements PassportService {
     }
 
     @Override
-    public void editPassport(Passport passport) {
+    public void editPassport(Long id, Passport passport) {
+        passport.setId(id);
         passportRepository.save(passport);
     }
 

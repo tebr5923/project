@@ -9,7 +9,7 @@ public interface ActualRegistrationService {
 
     ActualRegistration findActualRegistrationById(long actualRegistrationId);
 
-    void editActualRegistration(ActualRegistration actualRegistration);
+    void editActualRegistration(Long id, ActualRegistration actualRegistration);
 
     void deleteActualRegistration(long actualRegistrationId);
 

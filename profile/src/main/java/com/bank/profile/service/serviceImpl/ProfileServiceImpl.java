@@ -29,7 +29,8 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public void editProfile(Profile profile) {
+    public void editProfile(Long id, Profile profile) {
+        profile.setId(id);
         profileRepository.save(profile);
     }
 

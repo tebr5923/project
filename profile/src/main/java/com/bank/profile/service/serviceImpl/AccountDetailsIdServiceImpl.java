@@ -28,7 +28,8 @@ public class AccountDetailsIdServiceImpl implements AccountDetailsIdService {
     }
 
     @Override
-    public void editAccountDetailsId(AccountDetailsId accountDetailsId) {
+    public void editAccountDetailsId(Long id, AccountDetailsId accountDetailsId) {
+        accountDetailsId.setId(id);
         accountDetailsIdRepository.save(accountDetailsId);
     }
 

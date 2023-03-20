@@ -28,7 +28,8 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    public void editAudit(Audit audit) {
+    public void editAudit(Long id, Audit audit) {
+        audit.setId(id);
         auditRepository.save(audit);
     }
 

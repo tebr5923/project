@@ -1,9 +1,8 @@
 package com.bank.profile.entity.audit;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

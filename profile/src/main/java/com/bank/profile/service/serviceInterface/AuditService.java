@@ -9,7 +9,7 @@ public interface AuditService {
 
     Audit findAuditById(long auditId);
 
-    void editAudit(Audit audit);
+    void editAudit(Long id, Audit audit);
 
     void deleteAudit(long auditId);
 
