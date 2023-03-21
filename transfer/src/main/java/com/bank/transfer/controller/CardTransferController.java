@@ -140,7 +140,7 @@ public class CardTransferController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
-        transferService.deleteById(id);
+        transferService.delete(id);
     }
 
 }

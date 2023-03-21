@@ -43,7 +43,7 @@ public class CardTransferServiceImpl implements TransferService<CardTransfer> {
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         log.info("try to delete cardTransfer with id={}", id);
         repository.deleteById(id);
         log.info("success delete cardTransfer with id={}", id);

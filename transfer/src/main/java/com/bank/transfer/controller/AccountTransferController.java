@@ -139,7 +139,7 @@ public class AccountTransferController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
-        accountTransferService.deleteById(id);
+        accountTransferService.delete(id);
     }
 
 }

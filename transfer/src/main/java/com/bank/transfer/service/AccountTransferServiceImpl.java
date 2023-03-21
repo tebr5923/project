@@ -42,7 +42,7 @@ public class AccountTransferServiceImpl implements TransferService<AccountTransf
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         log.info("try to delete accountTransfer with id={}", id);
         accountTransferRepository.deleteById(id);
         log.info("success delete accountTransfer with id={}", id);

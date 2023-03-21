@@ -43,7 +43,7 @@ public class PhoneTransferServiceImpl implements TransferService<PhoneTransfer> 
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         log.info("try to delete phoneTransfer with id={}", id);
         repository.deleteById(id);
         log.info("success delete phoneTransfer with id={}", id);

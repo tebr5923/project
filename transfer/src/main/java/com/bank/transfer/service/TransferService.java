@@ -9,7 +9,7 @@ public interface TransferService<T> {
 
     void update(Long id, T transfer);
 
-    void deleteById(Long id);
+    void delete(Long id);
 
     Optional<T> getById(Long id);
 
