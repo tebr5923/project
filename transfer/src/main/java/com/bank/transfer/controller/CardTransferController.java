@@ -48,7 +48,7 @@ public class CardTransferController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CardTransferDTO>> list() {
+    public ResponseEntity<List<CardTransferDTO>> getAll() {
         var dtoList = transferService.getAll()
                 .stream()
                 .map(CardTransferMapper.MAPPER::ToDTO)

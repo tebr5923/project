@@ -46,7 +46,7 @@ public class AccountTransferController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AccountTransferDTO>> list() {
+    public ResponseEntity<List<AccountTransferDTO>> getAll() {
         var dtoList = accountTransferService.getAll()
                 .stream()
                 .map(AccountTransferMapper.MAPPER::ToDTO)

@@ -42,7 +42,7 @@ public class PhoneTransferController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PhoneTransferDTO>> list() {
+    public ResponseEntity<List<PhoneTransferDTO>> getAll() {
         var dtoList = transferService.getAll()
                 .stream()
                 .map(PhoneTransferMapper.MAPPER::ToDTO)
