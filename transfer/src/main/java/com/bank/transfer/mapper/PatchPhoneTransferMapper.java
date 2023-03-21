@@ -11,8 +11,8 @@ public interface PatchPhoneTransferMapper {
 
     PatchPhoneTransferMapper MAPPER = Mappers.getMapper(PatchPhoneTransferMapper.class);
 
-    PatchPhoneTransferDTO ToDTO(PhoneTransfer transfer);
+    PatchPhoneTransferDTO toDTO(PhoneTransfer transfer);
 
     @Mapping(target = "id", ignore = true)
-    PhoneTransfer ToEntity(PatchPhoneTransferDTO dto);
+    PhoneTransfer toEntity(PatchPhoneTransferDTO dto);
 }

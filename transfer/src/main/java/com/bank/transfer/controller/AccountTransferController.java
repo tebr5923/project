@@ -49,7 +49,7 @@ public class AccountTransferController {
     public ResponseEntity<List<AccountTransferDTO>> getAll() {
         var dtoList = accountTransferService.getAll()
                 .stream()
-                .map(AccountTransferMapper.MAPPER::ToDTO)
+                .map(AccountTransferMapper.MAPPER::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
@@ -61,7 +61,7 @@ public class AccountTransferController {
                 accountTransferService
                         .getById(id)
                         .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
-        var dto = AccountTransferMapper.MAPPER.ToDTO(accountTransfer);
+        var dto = AccountTransferMapper.MAPPER.toDTO(accountTransfer);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -69,7 +69,7 @@ public class AccountTransferController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @ResponseStatus(HttpStatus.CREATED) //201
     public ResponseEntity<AccountTransferDTO> create(@RequestBody @Valid AccountTransferDTO dto, BindingResult bindingResult) {
-        var accountTransfer = AccountTransferMapper.MAPPER.ToEntity(dto);
+        var accountTransfer = AccountTransferMapper.MAPPER.toEntity(dto);
 
         validator.validate(accountTransfer, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -77,7 +77,7 @@ public class AccountTransferController {
         }
 
         accountTransferService.save(accountTransfer);
-        var savedDto = AccountTransferMapper.MAPPER.ToDTO(accountTransfer);
+        var savedDto = AccountTransferMapper.MAPPER.toDTO(accountTransfer);
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);//201
     }
 
@@ -89,7 +89,7 @@ public class AccountTransferController {
         accountTransferService.getById(id)
                 .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
 
-        var accountTransfer = AccountTransferMapper.MAPPER.ToEntity(dto);
+        var accountTransfer = AccountTransferMapper.MAPPER.toEntity(dto);
         accountTransfer.setId(id);// for validation
 
         validator.validate(accountTransfer, bindingResult);
@@ -98,7 +98,7 @@ public class AccountTransferController {
         }
 
         accountTransferService.update(id, accountTransfer);
-        var updatedDto = AccountTransferMapper.MAPPER.ToDTO(accountTransfer);
+        var updatedDto = AccountTransferMapper.MAPPER.toDTO(accountTransfer);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
@@ -110,7 +110,7 @@ public class AccountTransferController {
         var accountTransferFromDB =
                 accountTransferService.getById(id)
                         .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
-        var accountTransfer = PatchAccountTransferMapper.MAPPER.ToEntity(dto);
+        var accountTransfer = PatchAccountTransferMapper.MAPPER.toEntity(dto);
         accountTransfer.setId(id);// for validation
 
         validator.validate(accountTransfer, bindingResult);
@@ -131,7 +131,7 @@ public class AccountTransferController {
             accountTransferFromDB.setAccountNumber(accountTransfer.getAccountNumber());
         }
         accountTransferService.update(id, accountTransferFromDB);
-        var updatedDto = PatchAccountTransferMapper.MAPPER.ToDTO(accountTransferFromDB);
+        var updatedDto = PatchAccountTransferMapper.MAPPER.toDTO(accountTransferFromDB);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 

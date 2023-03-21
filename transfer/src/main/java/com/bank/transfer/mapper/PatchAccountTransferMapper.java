@@ -11,8 +11,8 @@ public interface PatchAccountTransferMapper {
 
     PatchAccountTransferMapper MAPPER = Mappers.getMapper(PatchAccountTransferMapper.class);
 
-    PatchAccountTransferDTO ToDTO(AccountTransfer accountTransfer);
+    PatchAccountTransferDTO toDTO(AccountTransfer accountTransfer);
 
     @Mapping(target = "id", ignore = true)
-    AccountTransfer ToEntity(PatchAccountTransferDTO accountTransferDTO);
+    AccountTransfer toEntity(PatchAccountTransferDTO accountTransferDTO);
 }

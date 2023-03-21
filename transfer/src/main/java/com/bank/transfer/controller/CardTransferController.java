@@ -51,7 +51,7 @@ public class CardTransferController {
     public ResponseEntity<List<CardTransferDTO>> getAll() {
         var dtoList = transferService.getAll()
                 .stream()
-                .map(CardTransferMapper.MAPPER::ToDTO)
+                .map(CardTransferMapper.MAPPER::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
@@ -63,7 +63,7 @@ public class CardTransferController {
                 transferService
                         .getById(id)
                         .orElseThrow(() -> new CardTransferNotFoundException(String.format("cardTransfer with id= %d not found", id)));
-        var dto = CardTransferMapper.MAPPER.ToDTO(transfer);
+        var dto = CardTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -71,7 +71,7 @@ public class CardTransferController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @ResponseStatus(HttpStatus.CREATED) //201
     public ResponseEntity<CardTransferDTO> create(@RequestBody @Valid CardTransferDTO dto, BindingResult bindingResult) {
-        var transfer = CardTransferMapper.MAPPER.ToEntity(dto);
+        var transfer = CardTransferMapper.MAPPER.toEntity(dto);
 
         validator.validate(transfer, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -79,7 +79,7 @@ public class CardTransferController {
         }
 
         transferService.save(transfer);
-        var savedDto = CardTransferMapper.MAPPER.ToDTO(transfer);
+        var savedDto = CardTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);//201
     }
 
@@ -91,7 +91,7 @@ public class CardTransferController {
         transferService.getById(id)
                 .orElseThrow(() -> new CardTransferNotFoundException(String.format("cardTransfer with id= %d not found", id)));
 
-        var transfer = CardTransferMapper.MAPPER.ToEntity(dto);
+        var transfer = CardTransferMapper.MAPPER.toEntity(dto);
         transfer.setId(id);// for validation
 
         validator.validate(transfer, bindingResult);
@@ -100,7 +100,7 @@ public class CardTransferController {
         }
 
         transferService.update(id, transfer);
-        var updatedDto = CardTransferMapper.MAPPER.ToDTO(transfer);
+        var updatedDto = CardTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
@@ -112,7 +112,7 @@ public class CardTransferController {
         var transferFromDB =
                 transferService.getById(id)
                         .orElseThrow(() -> new CardTransferNotFoundException(String.format("cardTransfer with id= %d not found", id)));
-        var transfer = PatchCardTransferMapper.MAPPER.ToEntity(dto);
+        var transfer = PatchCardTransferMapper.MAPPER.toEntity(dto);
         transfer.setId(id);// for validation
 
         validator.validate(transfer, bindingResult);
@@ -133,7 +133,7 @@ public class CardTransferController {
             transferFromDB.setCardNumber(transfer.getCardNumber());
         }
         transferService.update(id, transferFromDB);
-        var updatedDto = PatchCardTransferMapper.MAPPER.ToDTO(transferFromDB);
+        var updatedDto = PatchCardTransferMapper.MAPPER.toDTO(transferFromDB);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 

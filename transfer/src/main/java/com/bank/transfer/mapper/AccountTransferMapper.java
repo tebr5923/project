@@ -11,8 +11,8 @@ public interface AccountTransferMapper {
 
     AccountTransferMapper MAPPER = Mappers.getMapper(AccountTransferMapper.class);
 
-    AccountTransferDTO ToDTO(AccountTransfer accountTransfer);
+    AccountTransferDTO toDTO(AccountTransfer accountTransfer);
 
     @Mapping(target = "id", ignore = true)
-    AccountTransfer ToEntity(AccountTransferDTO accountTransferDTO);
+    AccountTransfer toEntity(AccountTransferDTO accountTransferDTO);
 }

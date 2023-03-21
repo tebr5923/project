@@ -45,7 +45,7 @@ public class PhoneTransferController {
     public ResponseEntity<List<PhoneTransferDTO>> getAll() {
         var dtoList = transferService.getAll()
                 .stream()
-                .map(PhoneTransferMapper.MAPPER::ToDTO)
+                .map(PhoneTransferMapper.MAPPER::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
@@ -57,7 +57,7 @@ public class PhoneTransferController {
                 transferService
                         .getById(id)
                         .orElseThrow(() -> new PhoneTransferNotFoundException(String.format("phoneTransfer with id= %d not found", id)));
-        var dto = PhoneTransferMapper.MAPPER.ToDTO(transfer);
+        var dto = PhoneTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -66,14 +66,14 @@ public class PhoneTransferController {
     public ResponseEntity<PhoneTransferDTO> create(
             @RequestBody @Valid PhoneTransferDTO dto,
             BindingResult bindingResult) {
-        var transfer = PhoneTransferMapper.MAPPER.ToEntity(dto);
+        var transfer = PhoneTransferMapper.MAPPER.toEntity(dto);
 
         if (bindingResult.hasErrors()) {
             throw new PhoneTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         transferService.save(transfer);
-        var savedDto = PhoneTransferMapper.MAPPER.ToDTO(transfer);
+        var savedDto = PhoneTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);//201
     }
 
@@ -85,14 +85,14 @@ public class PhoneTransferController {
         transferService.getById(id)
                 .orElseThrow(() -> new PhoneTransferNotFoundException(String.format("phoneTransfer with id= %d not found", id)));
 
-        var transfer = PhoneTransferMapper.MAPPER.ToEntity(dto);
+        var transfer = PhoneTransferMapper.MAPPER.toEntity(dto);
 
         if (bindingResult.hasErrors()) {
             throw new PhoneTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         transferService.update(id, transfer);
-        var updatedDto = PhoneTransferMapper.MAPPER.ToDTO(transfer);
+        var updatedDto = PhoneTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
@@ -104,7 +104,7 @@ public class PhoneTransferController {
         var transferFromDB =
                 transferService.getById(id)
                         .orElseThrow(() -> new PhoneTransferNotFoundException(String.format("phoneTransfer with id= %d not found", id)));
-        var transfer = PatchPhoneTransferMapper.MAPPER.ToEntity(dto);
+        var transfer = PatchPhoneTransferMapper.MAPPER.toEntity(dto);
 
         if (bindingResult.hasErrors()) {
             throw new PhoneTransferValidationException(Utils.getErrorsMessage(bindingResult));
@@ -123,7 +123,7 @@ public class PhoneTransferController {
             transferFromDB.setPhoneNumber(transfer.getPhoneNumber());
         }
         transferService.update(id, transferFromDB);
-        var updatedDto = PatchPhoneTransferMapper.MAPPER.ToDTO(transferFromDB);
+        var updatedDto = PatchPhoneTransferMapper.MAPPER.toDTO(transferFromDB);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 

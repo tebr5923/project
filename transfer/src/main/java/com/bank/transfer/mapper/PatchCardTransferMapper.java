@@ -11,8 +11,8 @@ public interface PatchCardTransferMapper {
 
     PatchCardTransferMapper MAPPER = Mappers.getMapper(PatchCardTransferMapper.class);
 
-    PatchCardTransferDTO ToDTO(CardTransfer transfer);
+    PatchCardTransferDTO toDTO(CardTransfer transfer);
 
     @Mapping(target = "id", ignore = true)
-    CardTransfer ToEntity(PatchCardTransferDTO dto);
+    CardTransfer toEntity(PatchCardTransferDTO dto);
 }
