@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,14 +11,23 @@ import javax.persistence.Table;
 
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
 @Table(name = "account_transfer", schema = "transfer")
-public class AccountTransfer extends AbstractTransfer{
+public class AccountTransfer extends AbstractTransfer {
 
     @Column(name = "account_number", nullable = false, unique = true)
     private Long accountNumber;
 
+    @Override
+    public String toString() {
+        return "{" +
+                "id:" + id +
+                ",amount:" + amount +
+                ",purpose='" + purpose + '\'' +
+                ",accountDetailsId:" + accountDetailsId +
+                ",accountNumber:" + accountNumber +
+                "}";
+    }
 }

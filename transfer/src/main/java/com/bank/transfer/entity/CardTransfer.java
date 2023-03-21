@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +11,6 @@ import javax.persistence.Table;
 
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
@@ -22,4 +20,14 @@ public class CardTransfer extends AbstractTransfer{
     @Column(name = "card_number", nullable = false, unique = true)
     private Long cardNumber;
 
+    @Override
+    public String toString() {
+        return "{" +
+                "id:" + id +
+                ",amount:" + amount +
+                ",purpose='" + purpose + '\'' +
+                ",accountDetailsId:" + accountDetailsId +
+                ",cardNumber:" + cardNumber +
+                "}";
+    }
 }
