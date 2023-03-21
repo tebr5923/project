@@ -2,12 +2,14 @@ package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.transfer.CardTransferDTO;
 import com.bank.transfer.dto.transfer.PatchCardTransferDTO;
+import com.bank.transfer.entity.Audit;
 import com.bank.transfer.entity.CardTransfer;
 import com.bank.transfer.exception.AccountTransferValidationException;
 import com.bank.transfer.exception.CardTransferValidationException;
 import com.bank.transfer.exception.CardTransferNotFoundException;
 import com.bank.transfer.mapper.CardTransferMapper;
 import com.bank.transfer.mapper.PatchCardTransferMapper;
+import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.utils.Utils;
 import com.bank.transfer.validator.CardTransferCardNumberUniqueValidator;
@@ -38,12 +40,14 @@ public class CardTransferController {
 
     private final TransferService<CardTransfer> transferService;
     private final CardTransferCardNumberUniqueValidator validator;
+    private final AuditService auditService;
 
 
     @Autowired
-    public CardTransferController(TransferService<CardTransfer> transferService, CardTransferCardNumberUniqueValidator validator) {
+    public CardTransferController(TransferService<CardTransfer> transferService, CardTransferCardNumberUniqueValidator validator, AuditService auditService) {
         this.transferService = transferService;
         this.validator = validator;
+        this.auditService = auditService;
     }
 
 
@@ -79,6 +83,13 @@ public class CardTransferController {
         }
 
         transferService.save(transfer);
+
+        Audit audit = new Audit();
+        audit.setEntityType("CardTransfer");
+        audit.setOperationType("SAVE");
+        audit.setNewEntityJson(transfer.toString());
+        auditService.save(audit);
+
         var savedDto = CardTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);//201
     }
@@ -88,7 +99,7 @@ public class CardTransferController {
     public ResponseEntity<CardTransferDTO> update(@PathVariable("id") Long id,
                                                   @RequestBody @Valid CardTransferDTO dto,
                                                   BindingResult bindingResult) {
-        transferService.getById(id)
+        var oldTransfer = transferService.getById(id)
                 .orElseThrow(() -> new CardTransferNotFoundException(String.format("cardTransfer with id= %d not found", id)));
 
         var transfer = CardTransferMapper.MAPPER.toEntity(dto);
@@ -100,6 +111,14 @@ public class CardTransferController {
         }
 
         transferService.update(id, transfer);
+
+        Audit audit = new Audit();
+        audit.setEntityType("CardTransfer");
+        audit.setOperationType("PUT_UPDATE");
+        audit.setNewEntityJson(transfer.toString());
+        audit.setEntityJson(oldTransfer.toString());
+        auditService.save(audit);
+
         var updatedDto = CardTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
@@ -140,7 +159,17 @@ public class CardTransferController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
+        var oldTransfer = transferService.getById(id)
+                .orElseThrow(() -> new CardTransferNotFoundException(String.format("cardTransfer with id= %d not found", id)));
+
         transferService.delete(id);
+
+        Audit audit = new Audit();
+        audit.setEntityType("CardTransfer");
+        audit.setOperationType("DELETE");
+        audit.setNewEntityJson(oldTransfer.toString());
+        audit.setEntityJson(oldTransfer.toString());
+        auditService.save(audit);
     }
 
 }

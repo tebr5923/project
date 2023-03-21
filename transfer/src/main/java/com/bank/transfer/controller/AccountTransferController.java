@@ -3,10 +3,12 @@ package com.bank.transfer.controller;
 import com.bank.transfer.dto.transfer.AccountTransferDTO;
 import com.bank.transfer.dto.transfer.PatchAccountTransferDTO;
 import com.bank.transfer.entity.AccountTransfer;
+import com.bank.transfer.entity.Audit;
 import com.bank.transfer.exception.AccountTransferValidationException;
 import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.mapper.AccountTransferMapper;
 import com.bank.transfer.mapper.PatchAccountTransferMapper;
+import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.utils.Utils;
 import com.bank.transfer.validator.AccountTransferAccountNumberUniqueValidator;
@@ -37,11 +39,13 @@ public class AccountTransferController {
 
     private final TransferService<AccountTransfer> accountTransferService;
     private final AccountTransferAccountNumberUniqueValidator validator;
+    private final AuditService auditService;
 
     @Autowired
-    public AccountTransferController(TransferService<AccountTransfer> accountTransferService, AccountTransferAccountNumberUniqueValidator validator) {
+    public AccountTransferController(TransferService<AccountTransfer> accountTransferService, AccountTransferAccountNumberUniqueValidator validator, AuditService auditService) {
         this.accountTransferService = accountTransferService;
         this.validator = validator;
+        this.auditService = auditService;
     }
 
 
@@ -77,6 +81,13 @@ public class AccountTransferController {
         }
 
         accountTransferService.save(accountTransfer);
+
+        Audit audit = new Audit();
+        audit.setEntityType("AccountTransfer");
+        audit.setOperationType("SAVE");
+        audit.setNewEntityJson(accountTransfer.toString());
+        auditService.save(audit);
+
         var savedDto = AccountTransferMapper.MAPPER.toDTO(accountTransfer);
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);//201
     }
@@ -86,7 +97,7 @@ public class AccountTransferController {
     public ResponseEntity<AccountTransferDTO> update(@PathVariable("id") Long id,
                                                      @RequestBody @Valid AccountTransferDTO dto,
                                                      BindingResult bindingResult) {
-        accountTransferService.getById(id)
+        var oldTransfer = accountTransferService.getById(id)
                 .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
 
         var accountTransfer = AccountTransferMapper.MAPPER.toEntity(dto);
@@ -98,6 +109,14 @@ public class AccountTransferController {
         }
 
         accountTransferService.update(id, accountTransfer);
+
+        Audit audit = new Audit();
+        audit.setEntityType("AccountTransfer");
+        audit.setOperationType("PUT_UPDATE");
+        audit.setNewEntityJson(accountTransfer.toString());
+        audit.setEntityJson(oldTransfer.toString());
+        auditService.save(audit);
+
         var updatedDto = AccountTransferMapper.MAPPER.toDTO(accountTransfer);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
@@ -139,7 +158,18 @@ public class AccountTransferController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
+        var accountTransferFromDB =
+                accountTransferService.getById(id)
+                        .orElseThrow(() -> new AccountTransferNotFoundException(String.format("accountTransfer with id= %d not found", id)));
+
         accountTransferService.delete(id);
+
+        Audit audit = new Audit();
+        audit.setEntityType("AccountTransfer");
+        audit.setOperationType("DELETE");
+        audit.setNewEntityJson(accountTransferFromDB.toString());
+        audit.setEntityJson(accountTransferFromDB.toString());
+        auditService.save(audit);
     }
 
 }

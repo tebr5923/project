@@ -3,11 +3,13 @@ package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.transfer.PatchPhoneTransferDTO;
 import com.bank.transfer.dto.transfer.PhoneTransferDTO;
+import com.bank.transfer.entity.Audit;
 import com.bank.transfer.entity.PhoneTransfer;
 import com.bank.transfer.exception.PhoneTransferNotFoundException;
 import com.bank.transfer.exception.PhoneTransferValidationException;
 import com.bank.transfer.mapper.PatchPhoneTransferMapper;
 import com.bank.transfer.mapper.PhoneTransferMapper;
+import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +37,13 @@ import java.util.stream.Collectors;
 public class PhoneTransferController {
 
     private final TransferService<PhoneTransfer> transferService;
+    private final AuditService auditService;
+
 
     @Autowired
-    public PhoneTransferController(TransferService<PhoneTransfer> transferService) {
+    public PhoneTransferController(TransferService<PhoneTransfer> transferService, AuditService auditService) {
         this.transferService = transferService;
+        this.auditService = auditService;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,6 +78,13 @@ public class PhoneTransferController {
         }
 
         transferService.save(transfer);
+
+        Audit audit = new Audit();
+        audit.setEntityType("PhoneTransfer");
+        audit.setOperationType("SAVE");
+        audit.setNewEntityJson(transfer.toString());
+        auditService.save(audit);
+
         var savedDto = PhoneTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);//201
     }
@@ -82,7 +94,7 @@ public class PhoneTransferController {
     public ResponseEntity<PhoneTransferDTO> update(@PathVariable("id") Long id,
                                                    @RequestBody @Valid PhoneTransferDTO dto,
                                                    BindingResult bindingResult) {
-        transferService.getById(id)
+        var oldTransfer = transferService.getById(id)
                 .orElseThrow(() -> new PhoneTransferNotFoundException(String.format("phoneTransfer with id= %d not found", id)));
 
         var transfer = PhoneTransferMapper.MAPPER.toEntity(dto);
@@ -92,6 +104,14 @@ public class PhoneTransferController {
         }
 
         transferService.update(id, transfer);
+
+        Audit audit = new Audit();
+        audit.setEntityType("PhoneTransfer");
+        audit.setOperationType("PUT_UPDATE");
+        audit.setNewEntityJson(transfer.toString());
+        audit.setEntityJson(oldTransfer.toString());
+        auditService.save(audit);
+
         var updatedDto = PhoneTransferMapper.MAPPER.toDTO(transfer);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
@@ -131,7 +151,18 @@ public class PhoneTransferController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
+        var transferFromDB =
+                transferService.getById(id)
+                        .orElseThrow(() -> new PhoneTransferNotFoundException(String.format("phoneTransfer with id= %d not found", id)));
+
         transferService.delete(id);
+
+        Audit audit = new Audit();
+        audit.setEntityType("PhoneTransfer");
+        audit.setOperationType("DELETE");
+        audit.setNewEntityJson(transferFromDB.toString());
+        audit.setEntityJson(transferFromDB.toString());
+        auditService.save(audit);
     }
 
 
