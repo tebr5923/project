@@ -11,3 +11,9 @@
 <li>добейся успешного запуска своего микросервиса</li>
 </ol>
 
+
+
+Swagger UI: http://localhost:8089/api/profile/swagger-ui/index.html
+
+Swagger OpenAPI .json: http://localhost:8089/api/profile/v3/api-docs
+
