@@ -24,6 +24,7 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
+    @Transactional
     public void save(Audit audit) {
         log.info("try to save audit: {}", audit);
         auditRepository.save(audit);
