@@ -33,3 +33,11 @@ logging:
 #  file:
 #    name: account-transfer.log
 #    path: /
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    enabled: true
+

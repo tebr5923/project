@@ -30,6 +30,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "audit", schema = "transfer")
 public class Audit {
