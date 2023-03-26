@@ -2,6 +2,7 @@ package com.bank.transfer.service;
 
 import com.bank.transfer.entity.CardTransfer;
 import com.bank.transfer.repository.CardTransferRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,18 +10,21 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CardTransferServiceImplTest {
-
     private static final Long ID = 1L;
     private static final Long CARD_NUMBER = 123L;
+
+    private static CardTransfer transfer;
+    private static List<CardTransfer> transfers;
 
     @Mock
     private CardTransferRepository repository;
@@ -29,30 +33,40 @@ class CardTransferServiceImplTest {
     private CardTransferServiceImpl service;
 
 
-    @Test
-    void getById_shouldCallFindByIdFromRepository_whenCallGetByIdFromService() {
-        var transfer = CardTransfer.builder()
+    @BeforeAll
+    static void init() {
+        transfer = CardTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))
                 .purpose("test")
                 .accountDetailsId(11L)
                 .cardNumber(11L)
                 .build();
+        transfers = List.of(new CardTransfer(), new CardTransfer());
+    }
+
+
+    @Test
+    void getById_shouldCallFindByIdFromRepository_whenCallGetByIdFromService() {
         when(repository.findById(ID)).thenReturn(Optional.of(transfer));
         var expected = Optional.of(transfer);
 
         var actual = service.getById(ID);
 
         verify(repository, times(1)).findById(ID);
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 
 
     @Test
     void getAll_shouldCallFindAllFromFromRepository_whenCallGetAllFromService() {
-        service.getAll();
+        when(repository.findAll()).thenReturn(transfers);
+        var expected = transfers;
+
+        var actual = service.getAll();
 
         verify(repository, times(1)).findAll();
+        assertThat(actual).isEqualTo(expected);
     }
 
 
@@ -86,9 +100,13 @@ class CardTransferServiceImplTest {
 
     @Test
     void getByNumber_shouldCallGetByCardNumberFromRepository_whenCallGetByNumberFromService() {
-        service.getByNumber(CARD_NUMBER);
+        when(repository.getByCardNumber(CARD_NUMBER)).thenReturn(Optional.of(transfer));
+        var expected = Optional.of(transfer);
+
+        var actual = service.getByNumber(CARD_NUMBER);
 
         verify(repository, times(1)).getByCardNumber(CARD_NUMBER);
+        assertThat(actual).isEqualTo(expected);
     }
 
 }
