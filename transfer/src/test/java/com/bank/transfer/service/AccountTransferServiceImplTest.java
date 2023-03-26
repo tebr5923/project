@@ -34,7 +34,7 @@ class AccountTransferServiceImplTest {
 
 
     @BeforeAll
-    static void init() {
+    static void setUp() {
         transfer = AccountTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))

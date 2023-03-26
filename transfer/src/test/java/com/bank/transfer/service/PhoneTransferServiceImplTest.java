@@ -34,7 +34,7 @@ class PhoneTransferServiceImplTest {
 
 
     @BeforeAll
-    static void init() {
+    static void setUp() {
         transfer = PhoneTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))
