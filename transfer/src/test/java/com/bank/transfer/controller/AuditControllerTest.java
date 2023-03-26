@@ -2,6 +2,7 @@ package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.audit.AuditDto;
 import com.bank.transfer.entity.Audit;
+import com.bank.transfer.exception.AuditNotFoundException;
 import com.bank.transfer.service.AuditService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +29,6 @@ class AuditControllerTest {
     private static AuditDto dto;
     private static List<Audit> audits;
     private static List<AuditDto> dtoList;
-
 
     @Mock
     private AuditService auditService;
@@ -75,6 +77,30 @@ class AuditControllerTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    void getById_shouldReturnValidResponseEntity_whenGetAuditWhichExist() {
+        when(auditService.getById(ID)).thenReturn(Optional.of(audit));
+        var expected = new ResponseEntity<>(dto, HttpStatus.OK);
+
+        var actual = controller.getById(ID);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    void getById_shouldThrowAuditNotFoundException_whenGetAuditWhichNotExist() {
+        when(auditService.getById(ID)).thenReturn(Optional.empty());
+
+      //  assertThrows(AuditNotFoundException.class, () -> controller.getById(ID));
+        assertThatThrownBy(() -> controller.getById(ID))
+                .isInstanceOf(AuditNotFoundException.class)
+                .hasMessage(String.format("audit with id= %d not found", ID));
     }
 
 }
