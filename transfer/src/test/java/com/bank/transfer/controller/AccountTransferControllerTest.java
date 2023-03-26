@@ -2,12 +2,11 @@ package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.transfer.AccountTransferDTO;
 import com.bank.transfer.entity.AccountTransfer;
+import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.validator.AccountTransferAccountNumberUniqueValidator;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,8 +17,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,13 +64,6 @@ class AccountTransferControllerTest {
         dtoList = List.of(dto, new AccountTransferDTO());
     }
 
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void getAll_returnValidResponseEntity() {
@@ -82,4 +76,29 @@ class AccountTransferControllerTest {
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual).isEqualTo(expected);
     }
+
+
+    @Test
+    void getById_shouldReturnValidResponseEntity_whenGetTransferWhichExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
+        var expected = new ResponseEntity<>(dto, HttpStatus.OK);
+
+        var actual = controller.getById(ID);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    void getById_shouldThrowAccountTransferNotFoundException_whenGetTransferWhichNotExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> controller.getById(ID))
+                .isInstanceOf(AccountTransferNotFoundException.class)
+                .hasMessage(String.format("accountTransfer with id= %d not found", ID));
+    }
+
+
 }

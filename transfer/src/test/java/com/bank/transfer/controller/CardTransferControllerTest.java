@@ -2,6 +2,7 @@ package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.transfer.CardTransferDTO;
 import com.bank.transfer.entity.CardTransfer;
+import com.bank.transfer.exception.CardTransferNotFoundException;
 import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.validator.CardTransferCardNumberUniqueValidator;
@@ -16,8 +17,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,4 +78,28 @@ class CardTransferControllerTest {
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual).isEqualTo(expected);
     }
+
+
+    @Test
+    void getById_shouldReturnValidResponseEntity_whenGetTransferWhichExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
+        var expected = new ResponseEntity<>(dto, HttpStatus.OK);
+
+        var actual = controller.getById(ID);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void getById_shouldThrowCardTransferNotFoundException_whenGetTransferWhichNotExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> controller.getById(ID))
+                .isInstanceOf(CardTransferNotFoundException.class)
+                .hasMessage(String.format("cardTransfer with id= %d not found", ID));
+    }
+
+
 }
