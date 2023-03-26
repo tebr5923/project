@@ -137,4 +137,26 @@ class PhoneTransferControllerTest {
     }
 
 
+    @Test
+    void delete_shouldCallDeleteFromService_whenDeleteTransferWhichExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
+
+        controller.delete(ID);
+
+        verify(transferService, times(1)).getById(ID);
+        verify(transferService, times(1)).delete(ID);
+        verify(auditService, times(1)).save(any());
+    }
+
+
+    @Test
+    void delete_shouldThrowPhoneTransferNotFoundException_whenDeleteTransferWhichNotExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> controller.delete(ID))
+                .isInstanceOf(PhoneTransferNotFoundException.class)
+                .hasMessage(String.format("phoneTransfer with id= %d not found", ID));
+    }
+
+
 }

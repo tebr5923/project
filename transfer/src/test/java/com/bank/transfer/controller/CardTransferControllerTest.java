@@ -142,4 +142,26 @@ class CardTransferControllerTest {
                 .isInstanceOf(CardTransferValidationException.class);
     }
 
+
+    @Test
+    void delete_shouldCallDeleteFromService_whenDeleteTransferWhichExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
+
+        controller.delete(ID);
+
+        verify(transferService, times(1)).getById(ID);
+        verify(transferService, times(1)).delete(ID);
+        verify(auditService, times(1)).save(any());
+    }
+
+
+    @Test
+    void delete_shouldThrowCardTransferNotFoundException_whenDeleteTransferWhichNotExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> controller.delete(ID))
+                .isInstanceOf(CardTransferNotFoundException.class)
+                .hasMessage(String.format("cardTransfer with id= %d not found", ID));
+    }
+
 }
