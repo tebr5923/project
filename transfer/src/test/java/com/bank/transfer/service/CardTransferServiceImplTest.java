@@ -34,7 +34,7 @@ class CardTransferServiceImplTest {
 
 
     @BeforeAll
-    static void setUp() {
+    static void init() {
         transfer = CardTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))

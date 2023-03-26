@@ -33,7 +33,7 @@ class AuditServiceImplTest {
 
 
     @BeforeAll
-    static void setUp() {
+    static void init() {
         audit = Audit.builder()
                 .id(ID)
                 .entityType("entityType")
