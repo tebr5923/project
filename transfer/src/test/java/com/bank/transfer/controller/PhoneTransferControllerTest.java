@@ -1,13 +1,13 @@
 package com.bank.transfer.controller;
 
-import com.bank.transfer.dto.transfer.AccountTransferDTO;
-import com.bank.transfer.entity.AccountTransfer;
+import com.bank.transfer.dto.transfer.CardTransferDTO;
+import com.bank.transfer.dto.transfer.PhoneTransferDTO;
+import com.bank.transfer.entity.CardTransfer;
+import com.bank.transfer.entity.PhoneTransfer;
 import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
-import com.bank.transfer.validator.AccountTransferAccountNumberUniqueValidator;
-import org.junit.jupiter.api.AfterEach;
+import com.bank.transfer.validator.CardTransferCardNumberUniqueValidator;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,57 +19,48 @@ import org.springframework.http.ResponseEntity;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AccountTransferControllerTest {
+class PhoneTransferControllerTest {
     private static final Long ID = 1L;
-    private static final Long ACCOUNT_NUMBER = 123L;
+    private static final Long PHONE_NUMBER = 123L;
 
-    private static AccountTransfer transfer;
-    private static AccountTransferDTO dto;
-    private static List<AccountTransfer> transfers;
-    private static List<AccountTransferDTO> dtoList;
-
-    @Mock
-    private TransferService<AccountTransfer> transferService;
+    private static PhoneTransfer transfer;
+    private static PhoneTransferDTO dto;
+    private static List<PhoneTransfer> transfers;
+    private static List<PhoneTransferDTO> dtoList;
 
     @Mock
-    private AccountTransferAccountNumberUniqueValidator validator;
+    private TransferService<PhoneTransfer> transferService;
 
     @Mock
     private AuditService auditService;
 
     @InjectMocks
-    private AccountTransferController controller;
+    PhoneTransferController controller;
+
 
     @BeforeAll
     static void init() {
-        transfer = AccountTransfer.builder()
+        transfer = PhoneTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))
                 .purpose("test")
                 .accountDetailsId(11L)
-                .accountNumber(11L)
+                .phoneNumber(11L)
                 .build();
-        dto = AccountTransferDTO.builder()
+        dto = PhoneTransferDTO.builder()
                 .amount(BigDecimal.valueOf(11.11))
                 .purpose("test")
                 .accountDetailsId(11L)
-                .accountNumber(11L)
+                .phoneNumber(11L)
                 .build();
-        transfers = List.of(transfer, new AccountTransfer());
-        dtoList = List.of(dto, new AccountTransferDTO());
+        transfers = List.of(transfer, new PhoneTransfer());
+        dtoList = List.of(dto, new PhoneTransferDTO());
     }
 
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void getAll_returnValidResponseEntity() {

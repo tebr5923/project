@@ -45,7 +45,7 @@ class AuditServiceImplTest {
                 .newEntityJson("newEntityJson")
                 .entityJson("entityJson")
                 .build();
-        audits = List.of(new Audit(), new Audit());
+        audits = List.of(audit, new Audit());
     }
 
 

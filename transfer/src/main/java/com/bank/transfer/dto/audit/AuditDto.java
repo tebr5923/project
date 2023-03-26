@@ -1,5 +1,7 @@
 package com.bank.transfer.dto.audit;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,9 @@ import java.time.OffsetDateTime;
 @EqualsAndHashCode
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class AuditDto {
 
     @NotNull(message = "entityType must not be empty")
