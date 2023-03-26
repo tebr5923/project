@@ -138,6 +138,42 @@ class PhoneTransferControllerTest {
 
 
     @Test
+    void update_shouldReturnValidResponseEntity_whenUpdatingTransferIsValid() {
+        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
+        when(bindingResult.hasErrors()).thenReturn(false);
+        var expected = new ResponseEntity<>(dto, HttpStatus.OK);
+
+        var actual = controller.update(ID, dto, bindingResult);
+
+        verify(transferService, times(1)).update(ID, transferToSave);
+        verify(auditService, times(1)).save(any());
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    void update_shouldThrowPhoneTransferValidationException_whenUpdatingTransferIsNotValid() {
+        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        assertThatThrownBy(() -> controller.update(ID, dto, bindingResult))
+                .isInstanceOf(PhoneTransferValidationException.class);
+    }
+
+
+    @Test
+    void update_shouldThrowPhoneTransferNotFoundException_whenUpdateTransferWhichNotExist() {
+        when(transferService.getById(ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> controller.update(ID, dto, bindingResult))
+                .isInstanceOf(PhoneTransferNotFoundException.class)
+                .hasMessage(String.format("phoneTransfer with id= %d not found", ID));
+    }
+
+
+    @Test
     void delete_shouldCallDeleteFromService_whenDeleteTransferWhichExist() {
         when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
 

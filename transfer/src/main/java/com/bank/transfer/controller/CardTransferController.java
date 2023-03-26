@@ -4,9 +4,8 @@ import com.bank.transfer.dto.transfer.CardTransferDTO;
 import com.bank.transfer.dto.transfer.PatchCardTransferDTO;
 import com.bank.transfer.entity.Audit;
 import com.bank.transfer.entity.CardTransfer;
-import com.bank.transfer.exception.AccountTransferValidationException;
-import com.bank.transfer.exception.CardTransferValidationException;
 import com.bank.transfer.exception.CardTransferNotFoundException;
+import com.bank.transfer.exception.CardTransferValidationException;
 import com.bank.transfer.mapper.CardTransferMapper;
 import com.bank.transfer.mapper.PatchCardTransferMapper;
 import com.bank.transfer.service.AuditService;
@@ -107,7 +106,7 @@ public class CardTransferController {
 
         validator.validate(transfer, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new AccountTransferValidationException(Utils.getErrorsMessage(bindingResult));
+            throw new CardTransferValidationException(Utils.getErrorsMessage(bindingResult));
         }
 
         transferService.update(id, transfer);
