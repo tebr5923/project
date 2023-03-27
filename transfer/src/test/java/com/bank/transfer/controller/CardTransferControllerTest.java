@@ -7,7 +7,7 @@ import com.bank.transfer.exception.CardTransferValidationException;
 import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.validator.CardTransferCardNumberUniqueValidator;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,11 +33,11 @@ class CardTransferControllerTest {
     private static final Long ID = 1L;
     private static final Long CARD_NUMBER = 123L;
 
-    private static CardTransfer transfer;
-    private static CardTransfer transferToSave;
-    private static CardTransferDTO dto;
-    private static List<CardTransfer> transfers;
-    private static List<CardTransferDTO> dtoList;
+    private CardTransfer transfer;
+    private CardTransfer transferToSave;
+    private CardTransferDTO dto;
+    private List<CardTransfer> transfers;
+    private List<CardTransferDTO> dtoList;
 
     @Mock
     private BindingResult bindingResult;
@@ -55,8 +55,8 @@ class CardTransferControllerTest {
     CardTransferController controller;
 
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         transfer = CardTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))

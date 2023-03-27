@@ -8,6 +8,7 @@ import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.validator.AccountTransferAccountNumberUniqueValidator;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,11 +34,11 @@ class AccountTransferControllerTest {
     private static final Long ID = 1L;
     private static final Long ACCOUNT_NUMBER = 123L;
 
-    private static AccountTransfer transfer;
-    private static AccountTransfer transferToSave;
-    private static AccountTransferDTO dto;
-    private static List<AccountTransfer> transfers;
-    private static List<AccountTransferDTO> dtoList;
+    private AccountTransfer transfer;
+    private AccountTransfer transferToSave;
+    private AccountTransferDTO dto;
+    private List<AccountTransfer> transfers;
+    private List<AccountTransferDTO> dtoList;
 
     @Mock
     private BindingResult bindingResult;
@@ -54,8 +55,8 @@ class AccountTransferControllerTest {
     @InjectMocks
     private AccountTransferController controller;
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         transfer = AccountTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))

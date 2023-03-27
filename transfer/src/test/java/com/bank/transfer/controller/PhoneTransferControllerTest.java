@@ -6,7 +6,7 @@ import com.bank.transfer.exception.PhoneTransferNotFoundException;
 import com.bank.transfer.exception.PhoneTransferValidationException;
 import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,11 +32,11 @@ class PhoneTransferControllerTest {
     private static final Long ID = 1L;
     private static final Long PHONE_NUMBER = 123L;
 
-    private static PhoneTransfer transfer;
-    private static PhoneTransfer transferToSave;
-    private static PhoneTransferDTO dto;
-    private static List<PhoneTransfer> transfers;
-    private static List<PhoneTransferDTO> dtoList;
+    private PhoneTransfer transfer;
+    private PhoneTransfer transferToSave;
+    private PhoneTransferDTO dto;
+    private List<PhoneTransfer> transfers;
+    private List<PhoneTransferDTO> dtoList;
 
     @Mock
     private BindingResult bindingResult;
@@ -51,8 +51,8 @@ class PhoneTransferControllerTest {
     PhoneTransferController controller;
 
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         transfer = PhoneTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))

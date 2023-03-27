@@ -2,7 +2,7 @@ package com.bank.transfer.service;
 
 import com.bank.transfer.entity.Audit;
 import com.bank.transfer.repository.AuditRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,8 +22,8 @@ import static org.mockito.Mockito.verify;
 class AuditServiceImplTest {
     private static final Long ID = 1L;
 
-    private static Audit audit;
-    private static List<Audit> audits;
+    private Audit audit;
+    private List<Audit> audits;
 
     @Mock
     private AuditRepository repository;
@@ -32,8 +32,8 @@ class AuditServiceImplTest {
     private AuditServiceImpl service;
 
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         audit = Audit.builder()
                 .id(ID)
                 .entityType("entityType")

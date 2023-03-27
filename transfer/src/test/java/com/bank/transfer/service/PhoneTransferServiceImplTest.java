@@ -2,7 +2,7 @@ package com.bank.transfer.service;
 
 import com.bank.transfer.entity.PhoneTransfer;
 import com.bank.transfer.repository.PhoneTransferRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,8 +23,8 @@ class PhoneTransferServiceImplTest {
     private static final Long ID = 1L;
     private static final Long PHONE_NUMBER = 123L;
 
-    private static PhoneTransfer transfer;
-    private static List<PhoneTransfer> transfers;
+    private PhoneTransfer transfer;
+    private List<PhoneTransfer> transfers;
 
     @Mock
     private PhoneTransferRepository repository;
@@ -33,8 +33,8 @@ class PhoneTransferServiceImplTest {
     private PhoneTransferServiceImpl service;
 
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         transfer = PhoneTransfer.builder()
                 .id(ID)
                 .amount(BigDecimal.valueOf(11.11))

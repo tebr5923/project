@@ -4,7 +4,7 @@ import com.bank.transfer.dto.audit.AuditDto;
 import com.bank.transfer.entity.Audit;
 import com.bank.transfer.exception.AuditNotFoundException;
 import com.bank.transfer.service.AuditService;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,10 +25,10 @@ import static org.mockito.Mockito.doReturn;
 class AuditControllerTest {
     private static final Long ID = 1L;
 
-    private static Audit audit;
-    private static AuditDto dto;
-    private static List<Audit> audits;
-    private static List<AuditDto> dtoList;
+    private Audit audit;
+    private AuditDto dto;
+    private List<Audit> audits;
+    private List<AuditDto> dtoList;
 
     @Mock
     private AuditService auditService;
@@ -37,8 +37,8 @@ class AuditControllerTest {
     AuditController controller;
 
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         var createdAt = OffsetDateTime.now();
         var modifiedAt = OffsetDateTime.now();
         audit = Audit.builder()
