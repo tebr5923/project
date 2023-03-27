@@ -1,13 +1,13 @@
 package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.transfer.AccountTransferDTO;
+import com.bank.transfer.dto.transfer.PatchAccountTransferDTO;
 import com.bank.transfer.entity.AccountTransfer;
 import com.bank.transfer.exception.AccountTransferNotFoundException;
 import com.bank.transfer.exception.AccountTransferValidationException;
 import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.validator.AccountTransferAccountNumberUniqueValidator;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,11 +32,11 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class AccountTransferControllerTest {
     private static final Long ID = 1L;
-    private static final Long ACCOUNT_NUMBER = 123L;
 
     private AccountTransfer transfer;
     private AccountTransfer transferToSave;
     private AccountTransferDTO dto;
+    private PatchAccountTransferDTO patchDto;
     private List<AccountTransfer> transfers;
     private List<AccountTransferDTO> dtoList;
 
@@ -71,6 +71,12 @@ class AccountTransferControllerTest {
                 .accountNumber(11L)
                 .build();
         dto = AccountTransferDTO.builder()
+                .amount(BigDecimal.valueOf(11.11))
+                .purpose("test")
+                .accountDetailsId(11L)
+                .accountNumber(11L)
+                .build();
+        patchDto = PatchAccountTransferDTO.builder()
                 .amount(BigDecimal.valueOf(11.11))
                 .purpose("test")
                 .accountDetailsId(11L)
@@ -174,6 +180,42 @@ class AccountTransferControllerTest {
         doReturn(Optional.empty()).when(transferService).getById(ID);
 
         assertThatThrownBy(() -> controller.update(ID, dto, bindingResult))
+                .isInstanceOf(AccountTransferNotFoundException.class)
+                .hasMessage(String.format("accountTransfer with id= %d not found", ID));
+    }
+
+
+    @Test
+    void patchUpdate_shouldReturnValidResponseEntity_whenUpdatingTransferIsValid() {
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
+        doReturn(false).when(bindingResult).hasErrors();
+        var expected = new ResponseEntity<>(patchDto, HttpStatus.OK);
+
+        var actual = controller.patchUpdate(ID, patchDto, bindingResult);
+
+        verify(validator, times(1)).validate(transfer, bindingResult);
+        verify(transferService, times(1)).update(ID, transfer);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    void patchUpdate_shouldThrowAccountTransferValidationException_whenUpdatingTransferIsNotValid() {
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThatThrownBy(() -> controller.patchUpdate(ID, patchDto, bindingResult))
+                .isInstanceOf(AccountTransferValidationException.class);
+    }
+
+
+    @Test
+    void patchUpdate_shouldThrowAccountTransferNotFoundException_whenUpdateTransferWhichNotExist() {
+        doReturn(Optional.empty()).when(transferService).getById(ID);
+
+        assertThatThrownBy(() -> controller.patchUpdate(ID, patchDto, bindingResult))
                 .isInstanceOf(AccountTransferNotFoundException.class)
                 .hasMessage(String.format("accountTransfer with id= %d not found", ID));
     }

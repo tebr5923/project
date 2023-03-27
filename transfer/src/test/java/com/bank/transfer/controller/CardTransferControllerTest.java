@@ -1,6 +1,7 @@
 package com.bank.transfer.controller;
 
 import com.bank.transfer.dto.transfer.CardTransferDTO;
+import com.bank.transfer.dto.transfer.PatchCardTransferDTO;
 import com.bank.transfer.entity.CardTransfer;
 import com.bank.transfer.exception.CardTransferNotFoundException;
 import com.bank.transfer.exception.CardTransferValidationException;
@@ -31,11 +32,11 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class CardTransferControllerTest {
     private static final Long ID = 1L;
-    private static final Long CARD_NUMBER = 123L;
 
     private CardTransfer transfer;
     private CardTransfer transferToSave;
     private CardTransferDTO dto;
+    private PatchCardTransferDTO patchDto;
     private List<CardTransfer> transfers;
     private List<CardTransferDTO> dtoList;
 
@@ -71,6 +72,12 @@ class CardTransferControllerTest {
                 .cardNumber(11L)
                 .build();
         dto = CardTransferDTO.builder()
+                .amount(BigDecimal.valueOf(11.11))
+                .purpose("test")
+                .accountDetailsId(11L)
+                .cardNumber(11L)
+                .build();
+        patchDto = PatchCardTransferDTO.builder()
                 .amount(BigDecimal.valueOf(11.11))
                 .purpose("test")
                 .accountDetailsId(11L)
@@ -175,6 +182,42 @@ class CardTransferControllerTest {
         doReturn(Optional.empty()).when(transferService).getById(ID);
 
         assertThatThrownBy(() -> controller.update(ID, dto, bindingResult))
+                .isInstanceOf(CardTransferNotFoundException.class)
+                .hasMessage(String.format("cardTransfer with id= %d not found", ID));
+    }
+
+
+    @Test
+    void patchUpdate_shouldReturnValidResponseEntity_whenUpdatingTransferIsValid() {
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
+        doReturn(false).when(bindingResult).hasErrors();
+        var expected = new ResponseEntity<>(patchDto, HttpStatus.OK);
+
+        var actual = controller.patchUpdate(ID, patchDto, bindingResult);
+
+        verify(validator, times(1)).validate(transfer, bindingResult);
+        verify(transferService, times(1)).update(ID, transfer);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    void patchUpdate_shouldThrowCardTransferValidationException_whenUpdatingTransferIsNotValid() {
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThatThrownBy(() -> controller.patchUpdate(ID, patchDto, bindingResult))
+                .isInstanceOf(CardTransferValidationException.class);
+    }
+
+
+    @Test
+    void patchUpdate_shouldThrowCardTransferNotFoundException_whenUpdateTransferWhichNotExist() {
+        doReturn(Optional.empty()).when(transferService).getById(ID);
+
+        assertThatThrownBy(() -> controller.patchUpdate(ID, patchDto, bindingResult))
                 .isInstanceOf(CardTransferNotFoundException.class)
                 .hasMessage(String.format("cardTransfer with id= %d not found", ID));
     }

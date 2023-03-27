@@ -1,5 +1,6 @@
 package com.bank.transfer.controller;
 
+import com.bank.transfer.dto.transfer.PatchPhoneTransferDTO;
 import com.bank.transfer.dto.transfer.PhoneTransferDTO;
 import com.bank.transfer.entity.PhoneTransfer;
 import com.bank.transfer.exception.PhoneTransferNotFoundException;
@@ -30,11 +31,11 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class PhoneTransferControllerTest {
     private static final Long ID = 1L;
-    private static final Long PHONE_NUMBER = 123L;
 
     private PhoneTransfer transfer;
     private PhoneTransfer transferToSave;
     private PhoneTransferDTO dto;
+    private PatchPhoneTransferDTO patchDto;
     private List<PhoneTransfer> transfers;
     private List<PhoneTransferDTO> dtoList;
 
@@ -67,6 +68,12 @@ class PhoneTransferControllerTest {
                 .phoneNumber(11L)
                 .build();
         dto = PhoneTransferDTO.builder()
+                .amount(BigDecimal.valueOf(11.11))
+                .purpose("test")
+                .accountDetailsId(11L)
+                .phoneNumber(11L)
+                .build();
+        patchDto = PatchPhoneTransferDTO.builder()
                 .amount(BigDecimal.valueOf(11.11))
                 .purpose("test")
                 .accountDetailsId(11L)
@@ -170,6 +177,41 @@ class PhoneTransferControllerTest {
         doReturn(Optional.empty()).when(transferService).getById(ID);
 
         assertThatThrownBy(() -> controller.update(ID, dto, bindingResult))
+                .isInstanceOf(PhoneTransferNotFoundException.class)
+                .hasMessage(String.format("phoneTransfer with id= %d not found", ID));
+    }
+
+
+    @Test
+    void patchUpdate_shouldReturnValidResponseEntity_whenUpdatingTransferIsValid() {
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
+        doReturn(false).when(bindingResult).hasErrors();
+        var expected = new ResponseEntity<>(patchDto, HttpStatus.OK);
+
+        var actual = controller.patchUpdate(ID, patchDto, bindingResult);
+
+        verify(transferService, times(1)).update(ID, transfer);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    void patchUpdate_shouldThrowPhoneTransferValidationException_whenUpdatingTransferIsNotValid() {
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThatThrownBy(() -> controller.patchUpdate(ID, patchDto, bindingResult))
+                .isInstanceOf(PhoneTransferValidationException.class);
+    }
+
+
+    @Test
+    void patchUpdate_shouldThrowPhoneTransferNotFoundException_whenUpdateTransferWhichNotExist() {
+        doReturn(Optional.empty()).when(transferService).getById(ID);
+
+        assertThatThrownBy(() -> controller.patchUpdate(ID, patchDto, bindingResult))
                 .isInstanceOf(PhoneTransferNotFoundException.class)
                 .hasMessage(String.format("phoneTransfer with id= %d not found", ID));
     }
