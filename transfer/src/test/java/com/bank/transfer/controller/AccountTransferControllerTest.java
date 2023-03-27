@@ -24,9 +24,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AccountTransferControllerTest {
@@ -83,7 +83,7 @@ class AccountTransferControllerTest {
     @Test
     void getAll_returnValidResponseEntity() {
         var expected = new ResponseEntity<>(dtoList, HttpStatus.OK);
-        when(transferService.getAll()).thenReturn(transfers);
+        doReturn(transfers).when(transferService).getAll();
 
         var actual = controller.getAll();
 
@@ -95,7 +95,7 @@ class AccountTransferControllerTest {
 
     @Test
     void getById_shouldReturnValidResponseEntity_whenGetTransferWhichExist() {
-        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
         var expected = new ResponseEntity<>(dto, HttpStatus.OK);
 
         var actual = controller.getById(ID);
@@ -108,7 +108,7 @@ class AccountTransferControllerTest {
 
     @Test
     void getById_shouldThrowAccountTransferNotFoundException_whenGetTransferWhichNotExist() {
-        when(transferService.getById(ID)).thenReturn(Optional.empty());
+        doReturn(Optional.empty()).when(transferService).getById(ID);
 
         assertThatThrownBy(() -> controller.getById(ID))
                 .isInstanceOf(AccountTransferNotFoundException.class)
@@ -118,7 +118,7 @@ class AccountTransferControllerTest {
 
     @Test
     void create_shouldReturnValidResponseEntity_whenCreatingTransferIsValid() {
-        when(bindingResult.hasErrors()).thenReturn(false);
+        doReturn(false).when(bindingResult).hasErrors();
         var expected = new ResponseEntity<>(dto, HttpStatus.CREATED);
 
         var actual = controller.create(dto, bindingResult);
@@ -134,7 +134,7 @@ class AccountTransferControllerTest {
 
     @Test
     void create_shouldThrowAccountTransferValidationException_whenCreatingTransferIsNotValid() {
-        when(bindingResult.hasErrors()).thenReturn(true);
+        doReturn(true).when(bindingResult).hasErrors();
 
         assertThatThrownBy(() -> controller.create(dto, bindingResult))
                 .isInstanceOf(AccountTransferValidationException.class);
@@ -143,8 +143,8 @@ class AccountTransferControllerTest {
 
     @Test
     void update_shouldReturnValidResponseEntity_whenUpdatingTransferIsValid() {
-        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
-        when(bindingResult.hasErrors()).thenReturn(false);
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
+        doReturn(false).when(bindingResult).hasErrors();
         var expected = new ResponseEntity<>(dto, HttpStatus.OK);
 
         var actual = controller.update(ID, dto, bindingResult);
@@ -160,8 +160,8 @@ class AccountTransferControllerTest {
 
     @Test
     void update_shouldThrowAccountTransferValidationException_whenUpdatingTransferIsNotValid() {
-        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
-        when(bindingResult.hasErrors()).thenReturn(true);
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
+        doReturn(true).when(bindingResult).hasErrors();
 
         assertThatThrownBy(() -> controller.update(ID, dto, bindingResult))
                 .isInstanceOf(AccountTransferValidationException.class);
@@ -170,7 +170,7 @@ class AccountTransferControllerTest {
 
     @Test
     void update_shouldThrowAccountTransferNotFoundException_whenUpdateTransferWhichNotExist() {
-        when(transferService.getById(ID)).thenReturn(Optional.empty());
+        doReturn(Optional.empty()).when(transferService).getById(ID);
 
         assertThatThrownBy(() -> controller.update(ID, dto, bindingResult))
                 .isInstanceOf(AccountTransferNotFoundException.class)
@@ -180,7 +180,7 @@ class AccountTransferControllerTest {
 
     @Test
     void delete_shouldCallDeleteFromService_whenDeleteTransferWhichExist() {
-        when(transferService.getById(ID)).thenReturn(Optional.of(transfer));
+        doReturn(Optional.of(transfer)).when(transferService).getById(ID);
 
         controller.delete(ID);
 
@@ -192,7 +192,7 @@ class AccountTransferControllerTest {
 
     @Test
     void delete_shouldThrowAccountTransferNotFoundException_whenDeleteTransferWhichNotExist() {
-        when(transferService.getById(ID)).thenReturn(Optional.empty());
+        doReturn(Optional.empty()).when(transferService).getById(ID);
 
         assertThatThrownBy(() -> controller.delete(ID))
                 .isInstanceOf(AccountTransferNotFoundException.class)

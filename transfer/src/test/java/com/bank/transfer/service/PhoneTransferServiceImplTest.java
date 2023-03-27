@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PhoneTransferServiceImplTest {
@@ -48,7 +48,7 @@ class PhoneTransferServiceImplTest {
 
     @Test
     void getById_shouldCallFindByIdFromRepository_whenCallGetByIdFromService() {
-        when(repository.findById(ID)).thenReturn(Optional.of(transfer));
+        doReturn(Optional.of(transfer)).when(repository).findById(ID);
         var expected = Optional.of(transfer);
 
         var actual = service.getById(ID);
@@ -60,7 +60,7 @@ class PhoneTransferServiceImplTest {
 
     @Test
     void getAll_shouldCallFindAllFromFromRepository_whenCallGetAllFromService() {
-        when(repository.findAll()).thenReturn(transfers);
+        doReturn(transfers).when(repository).findAll();
         var expected = transfers;
 
         var actual = service.getAll();
@@ -100,7 +100,7 @@ class PhoneTransferServiceImplTest {
 
     @Test
     void getByNumber_shouldCallGetByCardNumberFromRepository_whenCallGetByNumberFromService() {
-        when(repository.getByPhoneNumber(PHONE_NUMBER)).thenReturn(Optional.of(transfer));
+        doReturn(Optional.of(transfer)).when(repository).getByPhoneNumber(PHONE_NUMBER);
         var expected = Optional.of(transfer);
 
         var actual = service.getByNumber(PHONE_NUMBER);

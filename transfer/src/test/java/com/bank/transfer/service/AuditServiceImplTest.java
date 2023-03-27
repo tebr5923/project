@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuditServiceImplTest {
@@ -51,7 +51,7 @@ class AuditServiceImplTest {
 
     @Test
     void getById_shouldCallFindByIdFromRepository_whenCallGetByIdFromService() {
-        when(repository.findById(ID)).thenReturn(Optional.of(audit));
+        doReturn(Optional.of(audit)).when(repository).findById(ID);
         var expected = Optional.of(audit);
 
         var actual = service.getById(ID);
@@ -63,7 +63,7 @@ class AuditServiceImplTest {
 
     @Test
     void getAll_shouldCallFindAllFromFromRepository_whenCallGetAllFromService() {
-        when(repository.findAll()).thenReturn(audits);
+        doReturn(audits).when(repository).findAll();
         var expected = audits;
 
         var actual = service.getAll();
