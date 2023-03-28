@@ -1,5 +1,6 @@
 package com.bank.transfer.service;
 
+import com.bank.transfer.aop.DeleteToLog;
 import com.bank.transfer.entity.CardTransfer;
 import com.bank.transfer.repository.CardTransferRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,7 @@ public class CardTransferServiceImpl implements TransferService<CardTransfer> {
 
     @Override
     @Transactional
+    @DeleteToLog
     public void delete(Long id) {
         log.info("try to delete cardTransfer with id={}", id);
         repository.deleteById(id);

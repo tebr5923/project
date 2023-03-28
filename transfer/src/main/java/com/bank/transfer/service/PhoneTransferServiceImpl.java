@@ -1,5 +1,6 @@
 package com.bank.transfer.service;
 
+import com.bank.transfer.aop.DeleteToLog;
 import com.bank.transfer.entity.PhoneTransfer;
 import com.bank.transfer.repository.PhoneTransferRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,7 @@ public class PhoneTransferServiceImpl implements TransferService<PhoneTransfer> 
 
     @Override
     @Transactional
+    @DeleteToLog
     public void delete(Long id) {
         log.info("try to delete phoneTransfer with id={}", id);
         repository.deleteById(id);
