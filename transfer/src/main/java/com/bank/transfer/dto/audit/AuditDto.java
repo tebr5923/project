@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 
 @ToString
@@ -34,9 +33,9 @@ public class AuditDto {
     private String modifiedBy;
 
     @NotNull(message = "createdAt must not be empty")
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
-    private OffsetDateTime modifiedAt;
+    private LocalDateTime modifiedAt;
 
     private String newEntityJson;
 

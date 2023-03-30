@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +40,8 @@ class AuditServiceImplTest {
                 .operationType("operationType")
                 .createdBy("createdBy")
                 .modifiedBy("modifiedBy")
-                .createdAt(OffsetDateTime.now())
-                .modifiedAt(OffsetDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
                 .newEntityJson("newEntityJson")
                 .entityJson("entityJson")
                 .build();

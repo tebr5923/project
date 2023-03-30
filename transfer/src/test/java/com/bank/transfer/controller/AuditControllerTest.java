@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -39,8 +40,8 @@ class AuditControllerTest {
 
     @BeforeEach
     void init() {
-        var createdAt = OffsetDateTime.now();
-        var modifiedAt = OffsetDateTime.now();
+        var createdAt = LocalDateTime.now();
+        var modifiedAt = LocalDateTime.now();
         audit = Audit.builder()
                 .id(ID)
                 .entityType("entityType")

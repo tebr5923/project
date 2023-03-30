@@ -85,6 +85,7 @@ public class AccountTransferController {
         Audit audit = new Audit();
         audit.setEntityType("AccountTransfer");
         audit.setOperationType("SAVE");
+        audit.setEntityJson(accountTransfer.toString());
         audit.setNewEntityJson(accountTransfer.toString());
         auditService.save(audit);
 

@@ -21,7 +21,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -55,11 +55,11 @@ public class Audit {
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "modified_at")
-    private OffsetDateTime modifiedAt;
+    private LocalDateTime modifiedAt;
 
     @Column(name = "new_entity_json")
     private String newEntityJson;

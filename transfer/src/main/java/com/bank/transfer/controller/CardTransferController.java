@@ -86,6 +86,7 @@ public class CardTransferController {
         Audit audit = new Audit();
         audit.setEntityType("CardTransfer");
         audit.setOperationType("SAVE");
+        audit.setEntityJson(transfer.toString());
         audit.setNewEntityJson(transfer.toString());
         auditService.save(audit);
 

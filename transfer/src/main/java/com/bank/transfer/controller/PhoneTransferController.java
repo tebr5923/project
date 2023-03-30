@@ -82,6 +82,7 @@ public class PhoneTransferController {
         Audit audit = new Audit();
         audit.setEntityType("PhoneTransfer");
         audit.setOperationType("SAVE");
+        audit.setEntityJson(transfer.toString());
         audit.setNewEntityJson(transfer.toString());
         auditService.save(audit);
 
