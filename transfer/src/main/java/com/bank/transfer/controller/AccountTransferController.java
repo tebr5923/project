@@ -12,6 +12,7 @@ import com.bank.transfer.service.AuditService;
 import com.bank.transfer.service.TransferService;
 import com.bank.transfer.utils.Utils;
 import com.bank.transfer.validator.AccountTransferAccountNumberUniqueValidator;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,6 +50,7 @@ public class AccountTransferController {
     }
 
 
+    @Timed("GetAllFromController")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AccountTransferDTO>> getAll() {
         var dtoList = accountTransferService.getAll()

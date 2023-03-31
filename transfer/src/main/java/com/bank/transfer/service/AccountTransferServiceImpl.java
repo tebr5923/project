@@ -3,6 +3,7 @@ package com.bank.transfer.service;
 import com.bank.transfer.aop.DeleteToLog;
 import com.bank.transfer.entity.AccountTransfer;
 import com.bank.transfer.repository.AccountTransferRepository;
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,7 @@ public class AccountTransferServiceImpl implements TransferService<AccountTransf
 
     @Override
     @Transactional
+    @Timed("deleteFromService")
     @DeleteToLog
     public void delete(Long id) {
         log.info("try to delete accountTransfer with id={}", id);

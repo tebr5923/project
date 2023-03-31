@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s # По умолчанию — каждую 1 минуту.
+  evaluation_interval: 15s # Оценивать правила каждые 15 секунд. По умолчанию — каждую 1 минуту.
+
+rule_files:
+# - "first_rules.yml"
+# - "second_rules.yml"
+
+# Конфигурация очистки, содержащая ровно одну конечную точку для очистки:
+scrape_configs:
+#  - job_name: 'prometheus'
+
+#    static_configs:
+#      - target: ['localhost:9090']
+
+  - job_name: 'prometheus'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+#      - targets: ['localhost:8092']
+      - targets: ['localhost:8191']
